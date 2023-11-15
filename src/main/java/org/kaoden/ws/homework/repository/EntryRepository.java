@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EntryRepository {
 
-    void creat(Entry entry);
+    Entry create(Entry entry);
 
     Entry findById(Long id);
 
@@ -14,7 +14,7 @@ public interface EntryRepository {
 
     List<Entry> getAll();
 
-    void update(Long id, Entry entry);
+    Entry update(Long id, Entry entry);
 
     void delete(Long id);
 

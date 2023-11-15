@@ -5,28 +5,33 @@ import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class EntryRepositoryImpTest {
 
-    @Autowired
-    EntryRepository repository;
+    final EntryRepository repository = new EntryRepositoryImp();
 
     private Entry getEntry() {
         return Entry.builder()
+                .id(0L)
                 .name("Test")
                 .build();
     }
 
     @Test
-    void creatNull() {
-        assertThrows(NullPointerException.class, () ->  repository.creat(null));
+    void createEntry() {
+        // Assert
+        Entry expectedEntry = getEntry();
+
+        // Act
+        Entry actualEntry = repository.create(getEntry());
+
+        // Assert
+        assertThat(expectedEntry).isEqualTo(actualEntry);
     }
 
     @Test
@@ -39,6 +44,19 @@ class EntryRepositoryImpTest {
 
         // Assert
         assertEquals("There is no entry with this ID: " + id, exception.getMessage());
+    }
+
+    @Test
+    void findByIdEntry() {
+        // Arrange
+        Long id = 0L;
+        Entry expectedEntry = repository.create(getEntry());
+
+        // Act
+        Entry actualEntry = repository.findById(id);
+
+        // Assert
+        assertThat(actualEntry).isEqualTo(expectedEntry);
     }
 
     @Test
@@ -55,6 +73,20 @@ class EntryRepositoryImpTest {
     }
 
     @Test
+    void updateEntry() {
+        // Arrange
+        Long id = 0L;
+        Entry expectedEntry = Entry.builder().name("updated").build();
+        repository.create(getEntry());
+
+        // Act
+        Entry actualEntry = repository.update(id, expectedEntry);
+
+        // Assert
+        assertThat(actualEntry).isEqualTo(expectedEntry);
+    }
+
+    @Test
     void deleteNonexistentEntry() {
         // Arrange
         Long id = 0L;
@@ -65,5 +97,18 @@ class EntryRepositoryImpTest {
 
         // Assert
         assertEquals("Impossible delete entry with this ID: "  + id, exception.getMessage());
+    }
+
+    @Test
+    void deleteEntry() {
+        // Arrange
+        Long id = 0L;
+        repository.create(getEntry());
+
+        // Act
+        repository.delete(id);
+
+        // Assert
+        assertThrows(NotFoundException.class, () -> repository.findById(id));
     }
 }

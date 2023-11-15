@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EntryService {
 
-    void creat(EntryArgument entry);
+    Entry create(EntryArgument entry);
 
     Entry getExisting(Long id);
 
@@ -15,7 +15,7 @@ public interface EntryService {
 
     List<Entry> getAll();
 
-    void update(Long id, EntryArgument entry);
+    Entry update(Long id, EntryArgument entry);
 
     void delete(Long id);
 
