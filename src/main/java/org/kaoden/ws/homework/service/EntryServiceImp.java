@@ -15,14 +15,13 @@ public class EntryServiceImp implements EntryService {
     private final EntryRepository repository;
 
     @Override
-    public void creat(EntryArgument entry) {
-        Long id = repository.getFreeId();
-        repository.creat(Entry.builder()
-                              .id(id)
-                              .name(entry.getName())
-                              .description(entry.getDescription())
-                              .link(entry.getLink())
-                              .build());
+    public Entry create(EntryArgument entry) {
+        return repository.create(Entry.builder()
+                                      .id(repository.getFreeId())
+                                      .name(entry.getName())
+                                      .description(entry.getDescription())
+                                      .link(entry.getLink())
+                                      .build());
     }
 
     @Override
@@ -41,13 +40,13 @@ public class EntryServiceImp implements EntryService {
     }
 
     @Override
-    public void update(Long id, EntryArgument entry) {
-        repository.update(id, Entry.builder()
-                                   .id(id)
-                                   .name(entry.getName())
-                                   .description(entry.getDescription())
-                                   .link(entry.getLink())
-                                   .build());
+    public Entry update(Long id, EntryArgument entry) {
+        return repository.update(id, Entry.builder()
+                                          .id(id)
+                                          .name(entry.getName())
+                                          .description(entry.getDescription())
+                                          .link(entry.getLink())
+                                          .build());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.kaoden.ws.homework.controller.mapper;
 
+import org.kaoden.ws.homework.controller.dto.CreateEntryDTO;
 import org.kaoden.ws.homework.controller.dto.EntryDTO;
+import org.kaoden.ws.homework.controller.dto.UpdateEntryDTO;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.service.argument.EntryArgument;
 import org.mapstruct.Mapper;
@@ -14,6 +16,8 @@ public interface EntryMapper {
 
     List<EntryDTO> toDTOList(List<Entry> entries);
 
-    EntryArgument toModel(EntryDTO entryDto);
+    EntryArgument toModel(CreateEntryDTO entryDto);
+
+    EntryArgument toModel(UpdateEntryDTO entryDTO);
 
 }

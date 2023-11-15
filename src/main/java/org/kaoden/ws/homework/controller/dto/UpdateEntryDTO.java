@@ -9,9 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(description = "DTO to return Entry")
-public class EntryDTO {
-    Long id;
+@Schema(description = "DTO to update Entry")
+public class UpdateEntryDTO {
     String name;
     String description;
     String link;

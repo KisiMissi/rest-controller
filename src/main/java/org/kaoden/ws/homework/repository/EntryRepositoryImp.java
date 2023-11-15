@@ -17,10 +17,9 @@ public class EntryRepositoryImp implements EntryRepository {
     private static Long entryId = 0L;
 
     @Override
-    public void creat(Entry entry) {
-        Long id = getFreeId();
-        entry.setId(id);
-        entriesStorage.put(id, entry);
+    public Entry create(Entry entry) {
+        entriesStorage.put(entry.getId(), entry);
+        return entry;
     }
 
     @Override
@@ -45,9 +44,11 @@ public class EntryRepositoryImp implements EntryRepository {
     }
 
     @Override
-    public void update(Long id, Entry entry) {
-        if (entryExist(id))
+    public Entry update(Long id, Entry entry) {
+        if (entryExist(id)) {
             entriesStorage.put(id, entry);
+            return entry;
+        }
         else
             throw new NotFoundException("Impossible update entry with this ID: " + id);
     }
