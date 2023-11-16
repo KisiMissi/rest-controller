@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.repository;
+package org.kaoden.ws.homework.repository.entry;
 
 import org.kaoden.ws.homework.model.Entry;
 
@@ -19,5 +19,7 @@ public interface EntryRepository {
     void delete(Long id);
 
     Long getFreeId();
+
+    Boolean exists(Long id);
 
 }

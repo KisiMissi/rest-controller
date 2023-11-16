@@ -5,6 +5,8 @@ import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
+import org.kaoden.ws.homework.repository.entry.EntryRepository;
+import org.kaoden.ws.homework.repository.entry.EntryRepositoryImp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

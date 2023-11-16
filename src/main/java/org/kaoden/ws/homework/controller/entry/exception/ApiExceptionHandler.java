@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.controller.exception;
+package org.kaoden.ws.homework.controller.entry.exception;
 
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

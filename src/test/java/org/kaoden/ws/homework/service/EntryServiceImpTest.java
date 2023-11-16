@@ -5,9 +5,11 @@ import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.repository.EntryRepository;
-import org.kaoden.ws.homework.repository.EntryRepositoryImp;
-import org.kaoden.ws.homework.service.argument.EntryArgument;
+import org.kaoden.ws.homework.repository.entry.EntryRepository;
+import org.kaoden.ws.homework.repository.entry.EntryRepositoryImp;
+import org.kaoden.ws.homework.service.entry.EntryService;
+import org.kaoden.ws.homework.service.entry.EntryServiceImp;
+import org.kaoden.ws.homework.service.entry.argument.EntryArgument;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 

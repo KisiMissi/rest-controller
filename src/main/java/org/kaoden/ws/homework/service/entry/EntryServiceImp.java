@@ -1,9 +1,9 @@
-package org.kaoden.ws.homework.service;
+package org.kaoden.ws.homework.service.entry;
 
 import lombok.RequiredArgsConstructor;
 import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.repository.EntryRepository;
-import org.kaoden.ws.homework.service.argument.EntryArgument;
+import org.kaoden.ws.homework.repository.entry.EntryRepository;
+import org.kaoden.ws.homework.service.entry.argument.EntryArgument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,5 +52,10 @@ public class EntryServiceImp implements EntryService {
     @Override
     public void delete(Long id) {
         repository.delete(id);
+    }
+
+    @Override
+    public Boolean exists(Long id) {
+        return repository.exists(id);
     }
 }

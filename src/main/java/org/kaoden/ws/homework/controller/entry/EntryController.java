@@ -1,14 +1,14 @@
-package org.kaoden.ws.homework.controller;
+package org.kaoden.ws.homework.controller.entry;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.kaoden.ws.homework.controller.dto.CreateEntryDTO;
-import org.kaoden.ws.homework.controller.dto.EntryDTO;
-import org.kaoden.ws.homework.controller.dto.UpdateEntryDTO;
-import org.kaoden.ws.homework.controller.mapper.EntryMapper;
-import org.kaoden.ws.homework.service.EntryService;
+import org.kaoden.ws.homework.controller.entry.dto.CreateEntryDTO;
+import org.kaoden.ws.homework.controller.entry.dto.EntryDTO;
+import org.kaoden.ws.homework.controller.entry.dto.UpdateEntryDTO;
+import org.kaoden.ws.homework.controller.entry.mapper.EntryMapper;
+import org.kaoden.ws.homework.service.entry.EntryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.repository;
+package org.kaoden.ws.homework.repository.entry;
 
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
@@ -24,7 +24,7 @@ public class EntryRepositoryImp implements EntryRepository {
 
     @Override
     public Entry findById(Long id) {
-        if (entryExist(id))
+        if (exists(id))
             return entriesStorage.get(id);
         else
             throw new NotFoundException("There is no entry with this ID: " + id);
@@ -45,7 +45,7 @@ public class EntryRepositoryImp implements EntryRepository {
 
     @Override
     public Entry update(Long id, Entry entry) {
-        if (entryExist(id)) {
+        if (exists(id)) {
             entriesStorage.put(id, entry);
             return entry;
         }
@@ -55,7 +55,7 @@ public class EntryRepositoryImp implements EntryRepository {
 
     @Override
     public void delete(Long id) {
-        if (entryExist(id))
+        if (exists(id))
             entriesStorage.remove(id);
         else
             throw new NotFoundException("Impossible delete entry with this ID: "  + id);
@@ -66,7 +66,8 @@ public class EntryRepositoryImp implements EntryRepository {
         return entryId++;
     }
 
-    private boolean entryExist(Long id) {
+    @Override
+    public Boolean exists(Long id) {
         return entriesStorage.containsKey(id);
     }
 }

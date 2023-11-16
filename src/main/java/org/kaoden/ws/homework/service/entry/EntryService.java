@@ -1,7 +1,7 @@
-package org.kaoden.ws.homework.service;
+package org.kaoden.ws.homework.service.entry;
 
 import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.service.argument.EntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.EntryArgument;
 
 import java.util.List;
 
@@ -18,5 +18,7 @@ public interface EntryService {
     Entry update(Long id, EntryArgument entry);
 
     void delete(Long id);
+
+    Boolean exists(Long id);
 
 }

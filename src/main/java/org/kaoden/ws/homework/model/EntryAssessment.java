@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.controller.dto;
+package org.kaoden.ws.homework.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(description = "DTO to return Entry")
-public class EntryDTO {
+@Schema(description = "Assessment of the entry")
+public class EntryAssessment {
     Long id;
-    String name;
-    String description;
-    String link;
+    Long entryId;
+    Integer value;
+    String comment;
 }
