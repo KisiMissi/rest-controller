@@ -3,7 +3,8 @@ package org.kaoden.ws.homework.service;
 import lombok.RequiredArgsConstructor;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.EntryRepository;
-import org.kaoden.ws.homework.service.argument.EntryArgument;
+import org.kaoden.ws.homework.service.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.argument.UpdateEntryArgument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class EntryServiceImp implements EntryService {
     private final EntryRepository repository;
 
     @Override
-    public Entry create(EntryArgument entry) {
+    public Entry create(CreateEntryArgument entry) {
         return repository.create(Entry.builder()
                                       .id(repository.getFreeId())
                                       .name(entry.getName())
@@ -30,17 +31,15 @@ public class EntryServiceImp implements EntryService {
     }
 
     @Override
-    public List<Entry> search(String searchText) {
-        return repository.findByName(searchText);
+    public List<Entry> getAll(String searchText) {
+        if (searchText == null)
+            return repository.getAll();
+        else
+            return repository.findByName(searchText);
     }
 
     @Override
-    public List<Entry> getAll() {
-        return repository.getAll();
-    }
-
-    @Override
-    public Entry update(Long id, EntryArgument entry) {
+    public Entry update(Long id, UpdateEntryArgument entry) {
         return repository.update(id, Entry.builder()
                                           .id(id)
                                           .name(entry.getName())

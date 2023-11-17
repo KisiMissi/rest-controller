@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.EntryRepository;
 import org.kaoden.ws.homework.repository.EntryRepositoryImp;
-import org.kaoden.ws.homework.service.argument.EntryArgument;
+import org.kaoden.ws.homework.service.argument.CreateEntryArgument;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -37,10 +37,10 @@ class EntryServiceImpTest {
                     .build();
     }
 
-    private EntryArgument getArgument() {
-        return EntryArgument.builder()
-                            .name("Test")
-                            .build();
+    private CreateEntryArgument getArgument() {
+        return CreateEntryArgument.builder()
+                                  .name("Test")
+                                  .build();
     }
 
     @Test
@@ -101,7 +101,7 @@ class EntryServiceImpTest {
     void updateEntry() {
         // Arrange
         Long id = 0L;
-        EntryArgument argument = getArgument();
+        CreateEntryArgument argument = getArgument();
         Entry expectedEntry = getEntry();
         when(repository.update(id, expectedEntry)).thenReturn(expectedEntry);
 

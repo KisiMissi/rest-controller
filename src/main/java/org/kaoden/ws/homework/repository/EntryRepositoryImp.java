@@ -24,10 +24,11 @@ public class EntryRepositoryImp implements EntryRepository {
 
     @Override
     public Entry findById(Long id) {
-        if (entryExist(id))
+        if (entryExist(id)) {
             return entriesStorage.get(id);
-        else
+        } else {
             throw new NotFoundException("There is no entry with this ID: " + id);
+        }
     }
 
     @Override
@@ -49,16 +50,19 @@ public class EntryRepositoryImp implements EntryRepository {
             entriesStorage.put(id, entry);
             return entry;
         }
-        else
+        else {
             throw new NotFoundException("Impossible update entry with this ID: " + id);
+        }
     }
 
     @Override
     public void delete(Long id) {
-        if (entryExist(id))
+        if (entryExist(id)) {
             entriesStorage.remove(id);
-        else
-            throw new NotFoundException("Impossible delete entry with this ID: "  + id);
+        }
+        else {
+            throw new NotFoundException("Impossible delete entry with this ID: " + id);
+        }
     }
 
     @Override

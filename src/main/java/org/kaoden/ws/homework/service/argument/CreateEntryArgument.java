@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EntryArgument {
+public class CreateEntryArgument {
     String name;
     String description;
     String link;

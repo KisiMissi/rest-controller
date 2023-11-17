@@ -32,13 +32,10 @@ public class EntryController {
     @GetMapping("all")
     @Operation(description = "Return all entries from the storage or entries by name")
     public List<EntryDTO> getAll(@RequestParam(required = false) String name) {
-        if (name == null)
-            return mapper.toDTOList(service.getAll());
-        else
-            return mapper.toDTOList(service.search(name));
+        return mapper.toDTOList(service.getAll(name));
     }
 
-    @GetMapping("search-id/{id}")
+    @GetMapping("{id}")
     @Operation(description = "Search Entry by ID")
     public EntryDTO searchById(@PathVariable Long id) {
         return mapper.toDTO(service.getExisting(id));
