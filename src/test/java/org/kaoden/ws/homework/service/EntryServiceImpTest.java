@@ -6,8 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.EntryRepository;
-import org.kaoden.ws.homework.repository.EntryRepositoryImp;
 import org.kaoden.ws.homework.service.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.argument.UpdateEntryArgument;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -15,70 +16,68 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class EntryServiceImpTest {
 
+    final Entry testEntry = Entry.builder()
+                                 .id(0L)
+                                 .name("test")
+                                 .description("test-description")
+                                 .link("test-link")
+                                 .build();
+
     @Mock
-    static EntryRepository repository = new EntryRepositoryImp();
-    static EntryService service;
+    EntryRepository repository;
+    @InjectMocks
+    EntryServiceImp service;
 
     @BeforeEach
     void setMockitoAnnotations() {
         MockitoAnnotations.openMocks(this);
-        service = new EntryServiceImp(repository);
-    }
-
-    private Entry getEntry() {
-        return Entry.builder()
-                    .id(0L)
-                    .name("Test")
-                    .build();
-    }
-
-    private CreateEntryArgument getArgument() {
-        return CreateEntryArgument.builder()
-                                  .name("Test")
-                                  .build();
     }
 
     @Test
     void createEntry() {
         // Arrange
-        Entry expectedEntry = getEntry();
-        when(repository.create(expectedEntry)).thenReturn(expectedEntry);
+        CreateEntryArgument argument = CreateEntryArgument.builder()
+                                                          .name("test")
+                                                          .description("test-description")
+                                                          .link("test-link")
+                                                          .build();
+        when(repository.create(testEntry)).thenReturn(testEntry);
 
         // Act
-        Entry actualEntry = service.create(getArgument());
+        Entry actualEntry = service.create(argument);
 
         // Assert
-        assertThat(actualEntry).isEqualTo(expectedEntry);
+        assertThat(actualEntry).isEqualTo(testEntry);
     }
 
     @Test
     void getExistingEntryById() {
         // Arrange
         Long id = 0L;
-        Entry expectedEntry = getEntry();
-        when(repository.findById(id)).thenReturn(expectedEntry);
+        when(repository.findById(id)).thenReturn(testEntry);
 
         // Act
         Entry actualEntry = service.getExisting(id);
 
         // Assert
-        assertThat(actualEntry).isEqualTo(expectedEntry);
+        assertThat(actualEntry).isEqualTo(testEntry);
     }
 
     @Test
     void searchEntryByName() {
         // Arrange
         String name = "Test";
-        List<Entry> expectedList = Collections.singletonList(getEntry());
+        List<Entry> expectedList = Collections.singletonList(testEntry);
         when(repository.findByName(name)).thenReturn(expectedList);
 
         // Act
-        List<Entry> actualList = service.search(name);
+        List<Entry> actualList = service.getAll(name);
 
         // Assert
         assertThat(actualList).isEqualTo(expectedList);
@@ -87,11 +86,11 @@ class EntryServiceImpTest {
     @Test
     void getAllEntries() {
         // Arrange
-        List<Entry> expectedList = Collections.singletonList(getEntry());
+        List<Entry> expectedList = Collections.singletonList(testEntry);
         when(repository.getAll()).thenReturn(expectedList);
 
         // Act
-        List<Entry> actualList = service.getAll();
+        List<Entry> actualList = service.getAll(null);
 
         // Assert
         assertThat(actualList).isEqualTo(expectedList);
@@ -101,8 +100,17 @@ class EntryServiceImpTest {
     void updateEntry() {
         // Arrange
         Long id = 0L;
-        CreateEntryArgument argument = getArgument();
-        Entry expectedEntry = getEntry();
+        UpdateEntryArgument argument = UpdateEntryArgument.builder()
+                                                          .name("test-update")
+                                                          .description("test-description")
+                                                          .link("test-link")
+                                                          .build();
+        Entry expectedEntry = Entry.builder()
+                                   .id(id)
+                                   .name("test-update")
+                                   .description("test-description")
+                                   .link("test-link")
+                                   .build();
         when(repository.update(id, expectedEntry)).thenReturn(expectedEntry);
 
         // Act
@@ -116,12 +124,11 @@ class EntryServiceImpTest {
     void deleteEntry() {
         // Arrange
         Long id = 0L;
-        doNothing().when(repository).delete(id);
 
         // Act
         service.delete(id);
 
         // Assert
-        verify(repository, times(1)).delete(id);
+        verify(repository).delete(id);
     }
 }
