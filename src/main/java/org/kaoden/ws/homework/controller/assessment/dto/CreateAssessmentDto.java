@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 public class CreateAssessmentDto {
     @NotNull(message = "Assessment must have value")
     @Min(value = 1, message = "Value must be more than 1")
-    @Max(value = 5, message = "Value must be less than 5")
+    @Max(value = 5, message = "Value must be no more than 5")
     Integer value;
 
     @NotNull(message = "Assessment must have a comment")
