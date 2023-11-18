@@ -3,14 +3,11 @@ package org.kaoden.ws.homework.repository;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
-import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.kaoden.ws.homework.repository.entry.EntryRepositoryImp;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class EntryRepositoryImpTest {
@@ -36,17 +33,6 @@ class EntryRepositoryImpTest {
         assertThat(expectedEntry).isEqualTo(actualEntry);
     }
 
-    @Test
-    void findByIdNonexistentEntry() {
-        // Arrange
-        Long id = 0L;
-
-        // Act
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> repository.findById(id));
-
-        // Assert
-        assertEquals("There is no entry with this ID: " + id, exception.getMessage());
-    }
 
     @Test
     void findByIdEntry() {
@@ -59,19 +45,6 @@ class EntryRepositoryImpTest {
 
         // Assert
         assertThat(actualEntry).isEqualTo(expectedEntry);
-    }
-
-    @Test
-    void updateNonexistentEntry() {
-        // Arrange
-        Long id = 0L;
-        Entry testEntry = getEntry();
-
-        // Act
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> repository.update(id, testEntry));
-
-        // Assert
-        assertEquals("Impossible update entry with this ID: "  + id, exception.getMessage());
     }
 
     @Test
@@ -89,19 +62,6 @@ class EntryRepositoryImpTest {
     }
 
     @Test
-    void deleteNonexistentEntry() {
-        // Arrange
-        Long id = 0L;
-        Entry testEntry = getEntry();
-
-        // Act
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> repository.delete(id));
-
-        // Assert
-        assertEquals("Impossible delete entry with this ID: "  + id, exception.getMessage());
-    }
-
-    @Test
     void deleteEntry() {
         // Arrange
         Long id = 0L;
@@ -111,6 +71,6 @@ class EntryRepositoryImpTest {
         repository.delete(id);
 
         // Assert
-        assertThrows(NotFoundException.class, () -> repository.findById(id));
+        assertThat(repository.exists(id)).isEqualTo(false);
     }
 }

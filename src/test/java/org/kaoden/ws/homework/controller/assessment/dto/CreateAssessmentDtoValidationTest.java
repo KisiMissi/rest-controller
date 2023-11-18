@@ -90,7 +90,7 @@ class CreateAssessmentDtoValidationTest {
                                                .toList();
 
         // Assert
-        assertThat(actualMessages).isEqualTo(Lists.newArrayList("Value must be more than 1"));
+        assertThat(actualMessages).isEqualTo(Lists.newArrayList("Value must be no less than 1"));
     }
 
     @Test

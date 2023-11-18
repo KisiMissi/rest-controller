@@ -1,21 +1,21 @@
 package org.kaoden.ws.homework.service.entry;
 
 import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.service.entry.argument.EntryArgument;
+
+import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 
 import java.util.List;
 
 public interface EntryService {
 
-    Entry create(EntryArgument entry);
+    Entry create(CreateEntryArgument entry);
 
     Entry getExisting(Long id);
 
-    List<Entry> search(String searchText);
+    List<Entry> getAll(String searchText);
 
-    List<Entry> getAll();
-
-    Entry update(Long id, EntryArgument entry);
+    Entry update(Long id, UpdateEntryArgument entry);
 
     void delete(Long id);
 

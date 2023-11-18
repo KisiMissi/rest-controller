@@ -1,6 +1,5 @@
 package org.kaoden.ws.homework.repository.entry;
 
-import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +12,8 @@ import java.util.stream.Collectors;
 @Repository
 public class EntryRepositoryImp implements EntryRepository {
 
-    private final Map<Long, Entry> entriesStorage = new HashMap<>();
     private static Long entryId = 0L;
+    private final Map<Long, Entry> entriesStorage = new HashMap<>();
 
     @Override
     public Entry create(Entry entry) {
@@ -24,18 +23,18 @@ public class EntryRepositoryImp implements EntryRepository {
 
     @Override
     public Entry findById(Long id) {
-        if (exists(id))
-            return entriesStorage.get(id);
-        else
-            throw new NotFoundException("There is no entry with this ID: " + id);
+        return entriesStorage.get(id);
+
     }
 
     @Override
     public List<Entry> findByName(String name) {
         return entriesStorage.values()
-                .stream()
-                .filter(entry -> entry.getName().toLowerCase().contains(name.toLowerCase()))
-                .collect(Collectors.toList());
+                             .stream()
+                             .filter(entry -> entry.getName()
+                                                   .toLowerCase()
+                                                   .contains(name.toLowerCase()))
+                             .collect(Collectors.toList());
     }
 
     @Override
@@ -45,20 +44,13 @@ public class EntryRepositoryImp implements EntryRepository {
 
     @Override
     public Entry update(Long id, Entry entry) {
-        if (exists(id)) {
-            entriesStorage.put(id, entry);
-            return entry;
-        }
-        else
-            throw new NotFoundException("Impossible update entry with this ID: " + id);
+        entriesStorage.put(id, entry);
+        return entry;
     }
 
     @Override
     public void delete(Long id) {
-        if (exists(id))
-            entriesStorage.remove(id);
-        else
-            throw new NotFoundException("Impossible delete entry with this ID: "  + id);
+        entriesStorage.remove(id);
     }
 
     @Override

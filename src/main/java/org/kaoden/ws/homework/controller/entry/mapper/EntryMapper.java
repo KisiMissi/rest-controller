@@ -4,7 +4,8 @@ import org.kaoden.ws.homework.controller.entry.dto.CreateEntryDTO;
 import org.kaoden.ws.homework.controller.entry.dto.EntryDTO;
 import org.kaoden.ws.homework.controller.entry.dto.UpdateEntryDTO;
 import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.service.entry.argument.EntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -16,8 +17,8 @@ public interface EntryMapper {
 
     List<EntryDTO> toDTOList(List<Entry> entries);
 
-    EntryArgument toModel(CreateEntryDTO entryDto);
+    CreateEntryArgument toModel(CreateEntryDTO entryDto);
 
-    EntryArgument toModel(UpdateEntryDTO entryDTO);
+    UpdateEntryArgument toModel(UpdateEntryDTO entryDTO);
 
 }
