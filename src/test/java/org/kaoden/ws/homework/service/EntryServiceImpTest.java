@@ -47,7 +47,13 @@ class EntryServiceImpTest {
                                                           .description("test-description")
                                                           .link("test-link")
                                                           .build();
-        when(repository.create(testEntry)).thenReturn(testEntry);
+        Entry entry = Entry.builder()
+                           .id(0L)
+                           .name("test")
+                           .description("test-description")
+                           .link("test-link")
+                           .build();
+        when(repository.create(testEntry)).thenReturn(entry);
 
         // Act
         Entry actualEntry = service.create(argument);

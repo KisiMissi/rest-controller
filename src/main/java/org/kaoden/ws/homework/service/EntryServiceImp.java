@@ -32,10 +32,7 @@ public class EntryServiceImp implements EntryService {
 
     @Override
     public List<Entry> getAll(String searchText) {
-        if (searchText == null)
-            return repository.getAll();
-        else
-            return repository.findByName(searchText);
+        return searchText == null ? repository.getAll() : repository.findByName(searchText);
     }
 
     @Override

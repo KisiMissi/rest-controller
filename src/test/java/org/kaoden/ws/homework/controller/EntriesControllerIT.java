@@ -30,21 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class EntriesServiceIT {
+class EntriesControllerIT {
 
     static final String URL = "entries";
     static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
     static final ObjectWriter WRITER = new ObjectMapper().writer();
-    final CreateEntryDTO testCreateEntryDto = CreateEntryDTO.builder()
-                                                            .name("test")
-                                                            .description("test-description")
-                                                            .link("test-link")
-                                                            .build();
-    final UpdateEntryDTO testUpdateEntryDto = UpdateEntryDTO.builder()
-                                                            .name("test-update")
-                                                            .description("test-description")
-                                                            .link("test-link")
-                                                            .build();
 
     @Autowired
     MockMvc mockMvc;
@@ -72,7 +62,11 @@ class EntriesServiceIT {
     @Test
     void createEntryInRep() throws Exception {
         // Arrange
-        String createEntry = WRITER.writeValueAsString(testCreateEntryDto);
+        String createEntry = WRITER.writeValueAsString(CreateEntryDTO.builder()
+                                                                     .name("test")
+                                                                     .description("test-description")
+                                                                     .link("test-link")
+                                                                     .build());
         String expectedEntry = WRITER.writeValueAsString(getEntry(0L, "test"));
 
         // Act
@@ -94,9 +88,11 @@ class EntriesServiceIT {
         // Arrange
         String name1 = "test-1";
         String name2 = "test-2";
-        repository.create(getEntry(0L, name1));
-        repository.create(getEntry(1L, name2));
-        String expectedList = WRITER.writeValueAsString(Lists.newArrayList(getEntryDto(0L, name1), getEntryDto(1L, name2)));
+        Entry entry1 = getEntry(0L, name1);
+        Entry entry2 = getEntry(1L, name2);
+        repository.create(entry1);
+        repository.create(entry2);
+        String expectedList = WRITER.writeValueAsString(Lists.newArrayList(entry1, entry2));
 
         // Act
         MvcResult result = mockMvc.perform(get("/{url}/all", URL))
@@ -137,7 +133,6 @@ class EntriesServiceIT {
         // Arrange
         Long id = 0L;
         String name = "test";
-//        String testEntry = WRITER.writeValueAsString();
         String expectedEntry = WRITER.writeValueAsString(getEntryDto(id, name));
         repository.create(getEntry(id, "test"));
 
@@ -157,9 +152,19 @@ class EntriesServiceIT {
     void updateEntry() throws Exception {
         // Arrange
         Long id = 0L;
-        String updateEntry = WRITER.writeValueAsString(testUpdateEntryDto);
-        String expectedEntry = WRITER.writeValueAsString(getEntryDto(id, "test-update"));
-        repository.create(getEntry(id, "test"));
+        String updateEntry = WRITER.writeValueAsString(UpdateEntryDTO.builder()
+                                                                     .name("test-update")
+                                                                     .description("update-description")
+                                                                     .link("update-link")
+                                                                     .build());
+        Entry expectedEntryObj = Entry.builder()
+                                      .id(id)
+                                      .name("test-update")
+                                      .description("update-description")
+                                      .link("update-link")
+                                      .build();
+        String expectedEntry = WRITER.writeValueAsString(expectedEntryObj);
+        repository.create(expectedEntryObj);
 
         // Act
         MvcResult result = mockMvc.perform(post("/{url}/{id}/update", URL, id)
