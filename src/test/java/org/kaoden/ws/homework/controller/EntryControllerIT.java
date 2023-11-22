@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.controller.dto.CreateEntryDTO;
 import org.kaoden.ws.homework.controller.dto.EntryDTO;
@@ -19,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class EntriesControllerIT {
+class EntryControllerIT {
 
     static final String URL = "entries";
     static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
@@ -92,7 +91,7 @@ class EntriesControllerIT {
         Entry entry2 = getEntry(1L, name2);
         repository.create(entry1);
         repository.create(entry2);
-        String expectedList = WRITER.writeValueAsString(Lists.newArrayList(entry1, entry2));
+        String expectedList = WRITER.writeValueAsString(List.of(entry1, entry2));
 
         // Act
         MvcResult result = mockMvc.perform(get("/{url}/all", URL))
@@ -111,9 +110,14 @@ class EntriesControllerIT {
         // Arrange
         String name1 = "test-1";
         String name2 = "test-2";
-        repository.create(getEntry(0L, name1));
-        repository.create(getEntry(1L, name2));
-        String expectedList = WRITER.writeValueAsString(Collections.singletonList(getEntryDto(1L, name2)));
+        String name3 = "tEsT-2";
+        Entry entry1 = getEntry(0L, name1);
+        Entry entry2 = getEntry(1L, name2);
+        Entry entry3 = getEntry(2L, name3);
+        repository.create(entry1);
+        repository.create(entry2);
+        repository.create(entry3);
+        String expectedList = WRITER.writeValueAsString(List.of(entry2, entry3));
 
 
         // Act
