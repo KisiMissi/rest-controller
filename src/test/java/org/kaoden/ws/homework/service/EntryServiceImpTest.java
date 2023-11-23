@@ -11,14 +11,14 @@ import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class EntryServiceImpTest {
@@ -48,13 +48,15 @@ class EntryServiceImpTest {
                                                           .description("test-description")
                                                           .link("test-link")
                                                           .build();
-        when(repository.create(testEntry)).thenReturn(testEntry);
+        Entry mockEntry = Mockito.mock(Entry.class);
+        when(repository.create(testEntry)).thenReturn(mockEntry);
 
         // Act
         Entry actualEntry = service.create(argument);
 
         // Assert
-        assertThat(actualEntry).isEqualTo(testEntry);
+        assertThat(actualEntry).isEqualTo(mockEntry);
+        verifyNoInteractions(mockEntry);
     }
 
     @Test

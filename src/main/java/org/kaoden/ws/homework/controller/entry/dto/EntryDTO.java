@@ -13,12 +13,12 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "DTO to return Entry")
 public class EntryDTO {
-    @Schema(name = "Entry ID in storage")
+    @Schema(name = "Entry ID in storage", requiredMode = REQUIRED)
     Long id;
     @Schema(name = "Entry name", requiredMode = REQUIRED)
     String name;
-    @Schema(name = "Entry description", requiredMode = REQUIRED)
+    @Schema(name = "Entry description")
     String description;
-    @Schema(name = "Entry link", requiredMode = REQUIRED)
+    @Schema(name = "Entry link")
     String link;
 }
