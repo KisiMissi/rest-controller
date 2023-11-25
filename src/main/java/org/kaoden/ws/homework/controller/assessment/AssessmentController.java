@@ -12,12 +12,10 @@ import org.kaoden.ws.homework.controller.assessment.dto.CreateAssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.mapper.AssessmentMapper;
 import org.kaoden.ws.homework.service.assessment.AssessmentService;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("assessment")
@@ -32,15 +30,14 @@ public class AssessmentController {
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Creating new assessment for entry")
-    public AssessmentDto create(@RequestParam(name = "entry") Long entryId,
-                                @Valid @RequestBody CreateAssessmentDto assessment) {
-        return mapper.toDto(assessmentAction.addAssessment(entryId, mapper.toModel(assessment)));
+    public AssessmentDto create(@Valid @RequestBody CreateAssessmentDto assessment) {
+        return mapper.toDto(assessmentAction.addAssessment(assessment.getEntryId(), mapper.toModel(assessment)));
     }
 
     @GetMapping("all")
     @Operation(description = "Getting all assessments for the entry")
-    public List<AssessmentDto> getAll(@RequestParam(name = "entry") Long id) {
-        return mapper.toDtoList(service.getAll(id));
+    public List<AssessmentDto> getAll(@RequestParam(name = "entryId") Long entryId) {
+        return mapper.toDtoList(service.getAll(entryId));
     }
 
     @PostMapping("delete")

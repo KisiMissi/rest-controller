@@ -9,10 +9,11 @@ import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class EntryServiceImp implements EntryService {
+public class EntryServiceImpl implements EntryService {
 
     private final EntryRepository repository;
 
@@ -28,43 +29,35 @@ public class EntryServiceImp implements EntryService {
 
     @Override
     public Entry getExisting(Long id) {
-        if (exists(id)) {
-            return repository.findById(id);
-        } else {
-            throw new NotFoundException("There is no entry with this ID: " + id);
-        }
+        return Optional.ofNullable(repository.findById(id))
+                       .orElseThrow(() -> new NotFoundException("There is no entry with this ID: " + id));
     }
 
     @Override
     public List<Entry> getAll(String searchText) {
-        if (searchText == null)
-            return repository.getAll();
-        else
-            return repository.findByName(searchText);
+        return searchText == null ? repository.getAll() : repository.findByName(searchText);
     }
 
     @Override
     public Entry update(Long id, UpdateEntryArgument entry) {
-        if (exists(id)) {
-            return repository.update(id, Entry.builder()
-                                              .id(id)
-                                              .name(entry.getName())
-                                              .description(entry.getDescription())
-                                              .link(entry.getLink())
-                                              .build());
-
-        } else {
+        if (! exists(id)) {
             throw new NotFoundException("Impossible update entry with this ID: " + id);
         }
+        return repository.update(id, Entry.builder()
+                                          .id(id)
+                                          .name(entry.getName())
+                                          .description(entry.getDescription())
+                                          .link(entry.getLink())
+                                          .build());
+
     }
 
     @Override
     public void delete(Long id) {
-        if (exists(id)) {
-            repository.delete(id);
-        } else {
+        if (! exists(id)) {
             throw new NotFoundException("Impossible delete entry with this ID: " + id);
         }
+        repository.delete(id);
     }
 
     @Override

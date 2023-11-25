@@ -7,7 +7,7 @@ import java.util.List;
 public interface AssessmentRepository {
     EntryAssessment create(EntryAssessment assessment);
 
-    List<EntryAssessment> getAll(Long id);
+    List<EntryAssessment> getAll(Long entryId);
 
     void delete(Long id);
 

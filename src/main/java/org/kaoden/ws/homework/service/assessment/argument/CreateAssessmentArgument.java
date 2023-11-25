@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AssessmentArgument {
+public class CreateAssessmentArgument {
     Long entryId;
     Integer value;
     String comment;

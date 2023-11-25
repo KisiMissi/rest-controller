@@ -1,7 +1,7 @@
 package org.kaoden.ws.homework.controller.entry.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,13 +14,13 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "DTO to update Entry")
 public class UpdateEntryDTO {
-    @NotNull(message = "Entry must be named")
+    @NotBlank(message = "Entry must be named and cannot be blank")
     @Schema(name = "Entry name", requiredMode = REQUIRED)
     String name;
-    @NotNull(message = "Entry must have a description")
+    @NotBlank(message = "Entry must have a description and cannot be blank")
     @Schema(name = "Entry description", requiredMode = REQUIRED)
     String description;
-    @NotNull(message = "Entry must have a link")
+    @NotBlank(message = "Entry must have a link and cannot be blank")
     @Schema(name = "Entry link", requiredMode = REQUIRED)
     String link;
 }

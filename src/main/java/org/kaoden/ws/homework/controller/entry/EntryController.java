@@ -10,12 +10,10 @@ import org.kaoden.ws.homework.controller.entry.dto.UpdateEntryDTO;
 import org.kaoden.ws.homework.controller.entry.mapper.EntryMapper;
 import org.kaoden.ws.homework.service.entry.EntryService;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("entries")

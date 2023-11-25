@@ -1,5 +1,6 @@
 package org.kaoden.ws.homework.repository.assessment;
 
+import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Repository
+@FieldDefaults(level = PRIVATE)
 public class AssessmentRepositoryImpl implements AssessmentRepository {
 
     static Long storageId = 0L;
@@ -22,10 +26,10 @@ public class AssessmentRepositoryImpl implements AssessmentRepository {
     }
 
     @Override
-    public List<EntryAssessment> getAll(Long id) {
+    public List<EntryAssessment> getAll(Long entryId) {
         return STORAGE.values()
                       .stream()
-                      .filter(assessment -> Objects.equals(assessment.getEntryId(), id))
+                      .filter(assessment -> Objects.equals(assessment.getEntryId(), entryId))
                       .collect(Collectors.toList());
     }
 

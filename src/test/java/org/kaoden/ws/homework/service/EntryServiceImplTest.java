@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
-import org.kaoden.ws.homework.service.entry.EntryServiceImp;
+import org.kaoden.ws.homework.service.entry.EntryServiceImpl;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class EntryServiceImpTest {
+class EntryServiceImplTest {
 
     final Entry testEntry = Entry.builder()
                                  .id(0L)
@@ -33,7 +33,7 @@ class EntryServiceImpTest {
     @Mock
     EntryRepository repository;
     @InjectMocks
-    EntryServiceImp service;
+    EntryServiceImpl service;
 
     @BeforeEach
     void setMockitoAnnotations() {

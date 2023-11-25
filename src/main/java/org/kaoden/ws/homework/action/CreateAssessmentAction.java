@@ -7,7 +7,7 @@ import org.kaoden.ws.homework.action.argument.CreateAssessmentActionArgument;
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.service.assessment.AssessmentService;
-import org.kaoden.ws.homework.service.assessment.argument.AssessmentArgument;
+import org.kaoden.ws.homework.service.assessment.argument.CreateAssessmentArgument;
 import org.kaoden.ws.homework.service.entry.EntryService;
 import org.springframework.stereotype.Component;
 
@@ -20,14 +20,14 @@ public class CreateAssessmentAction {
     final AssessmentService assessmentService;
 
     public EntryAssessment addAssessment(Long entryId, CreateAssessmentActionArgument argument) {
-        if (entryService.exists(entryId)) {
-            return assessmentService.create(entryId, AssessmentArgument.builder()
-                                                                       .entryId(entryId)
-                                                                       .value(argument.getValue())
-                                                                       .comment(argument.getComment())
-                                                                       .build());
-        } else
+        if (! entryService.exists(entryId)) {
             throw new NotFoundException("Entry with that ID: " + entryId + " doesn't exist");
+        }
+        return assessmentService.create(entryId, CreateAssessmentArgument.builder()
+                                                                         .entryId(entryId)
+                                                                         .value(argument.getValue())
+                                                                         .comment(argument.getComment())
+                                                                         .build());
     }
 
 }

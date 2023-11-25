@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
-import org.kaoden.ws.homework.service.assessment.argument.AssessmentArgument;
+import org.kaoden.ws.homework.service.assessment.argument.CreateAssessmentArgument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,12 +13,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AssessmentServiceImp implements AssessmentService {
+public class AssessmentServiceImpl implements AssessmentService {
 
     final AssessmentRepository repository;
 
     @Override
-    public EntryAssessment create(Long entryId, AssessmentArgument argument) {
+    public EntryAssessment create(Long entryId, CreateAssessmentArgument argument) {
         return repository.create(EntryAssessment.builder()
                                                 .id(repository.getFreeId())
                                                 .entryId(entryId)

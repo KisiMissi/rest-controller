@@ -1,5 +1,6 @@
 package org.kaoden.ws.homework.repository.entry;
 
+import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.model.Entry;
 import org.springframework.stereotype.Repository;
 
@@ -9,11 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Repository
-public class EntryRepositoryImp implements EntryRepository {
+import static lombok.AccessLevel.PRIVATE;
 
-    private static Long entryId = 0L;
-    private final Map<Long, Entry> entriesStorage = new HashMap<>();
+@Repository
+@FieldDefaults(level = PRIVATE)
+public class EntryRepositoryImpl implements EntryRepository {
+
+    static Long entryId = 0L;
+    final Map<Long, Entry> entriesStorage = new HashMap<>();
 
     @Override
     public Entry create(Entry entry) {
