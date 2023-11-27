@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.controller.dto;
+package org.kaoden.ws.homework.controller.entry.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

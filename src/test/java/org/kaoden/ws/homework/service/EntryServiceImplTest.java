@@ -5,9 +5,10 @@ import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.repository.EntryRepository;
-import org.kaoden.ws.homework.service.argument.CreateEntryArgument;
-import org.kaoden.ws.homework.service.argument.UpdateEntryArgument;
+import org.kaoden.ws.homework.repository.entry.EntryRepository;
+import org.kaoden.ws.homework.service.entry.EntryServiceImpl;
+import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class EntryServiceImpTest {
+class EntryServiceImplTest {
 
     final Entry testEntry = Entry.builder()
                                  .id(0L)
@@ -32,7 +33,7 @@ class EntryServiceImpTest {
     @Mock
     EntryRepository repository;
     @InjectMocks
-    EntryServiceImp service;
+    EntryServiceImpl service;
 
     @BeforeEach
     void setMockitoAnnotations() {
@@ -62,6 +63,7 @@ class EntryServiceImpTest {
     void getExistingEntryById() {
         // Arrange
         Long id = 0L;
+        when(repository.exists(id)).thenReturn(true);
         when(repository.findById(id)).thenReturn(testEntry);
 
         // Act
@@ -76,6 +78,7 @@ class EntryServiceImpTest {
         // Arrange
         String name = "Test";
         List<Entry> expectedList = Collections.singletonList(testEntry);
+        when(repository.exists(0L)).thenReturn(true);
         when(repository.findByName(name)).thenReturn(expectedList);
 
         // Act
@@ -113,6 +116,7 @@ class EntryServiceImpTest {
                                    .description("test-description")
                                    .link("test-link")
                                    .build();
+        when(repository.exists(id)).thenReturn(true);
         when(repository.update(id, expectedEntry)).thenReturn(expectedEntry);
 
         // Act
@@ -126,6 +130,7 @@ class EntryServiceImpTest {
     void deleteEntry() {
         // Arrange
         Long id = 0L;
+        when(repository.exists(id)).thenReturn(true);
 
         // Act
         service.delete(id);
