@@ -15,9 +15,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "DTO to create assessment of the Entry")
 public class CreateAssessmentDto {
-    @NotNull(message = "Assessment must have entry id")
-    Long entryId;
-
     @NotNull(message = "Assessment must have value")
     @Min(value = 1, message = "Value must be no less than 1")
     @Max(value = 5, message = "Value must be no more than 5")

@@ -1,25 +1,14 @@
 package org.kaoden.ws.homework.repository.entry;
 
 import org.kaoden.ws.homework.model.Entry;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface EntryRepository {
+public interface EntryRepository extends JpaRepository<Entry, Long> {
 
-    Entry create(Entry entry);
+    List<Entry> findEntriesByName(String name);
 
-    Entry findById(Long id);
-
-    List<Entry> findByName(String name);
-
-    List<Entry> getAll();
-
-    Entry update(Long id, Entry entry);
-
-    void delete(Long id);
-
-    Long getFreeId();
-
-    Boolean exists(Long id);
+    List<Entry> findEntriesByDescription(String description);
 
 }

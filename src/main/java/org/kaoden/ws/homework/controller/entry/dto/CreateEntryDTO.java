@@ -2,8 +2,11 @@ package org.kaoden.ws.homework.controller.entry.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -17,10 +20,12 @@ public class CreateEntryDTO {
     @NotBlank(message = "Entry must be named and it cannot be blank")
     @Schema(name = "Entry name", requiredMode = REQUIRED)
     String name;
+
     @NotBlank(message = "Entry must have a description and it cannot be blank")
     @Schema(name = "Entry description", requiredMode = REQUIRED)
     String description;
+
     @Schema(name = "Entry link", requiredMode = REQUIRED)
-    @NotBlank(message = "Entry must have a link and it cannot be blank")
-    String link;
+    @NotEmpty(message = "Entry must have at least one link")
+    List<@NotBlank(message = "Link cannot be blanked") String> links;
 }

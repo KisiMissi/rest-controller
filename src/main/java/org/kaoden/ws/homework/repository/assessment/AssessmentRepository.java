@@ -1,15 +1,12 @@
 package org.kaoden.ws.homework.repository.assessment;
 
 import org.kaoden.ws.homework.model.EntryAssessment;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AssessmentRepository {
-    EntryAssessment create(EntryAssessment assessment);
+public interface AssessmentRepository extends JpaRepository<EntryAssessment, Long> {
 
-    List<EntryAssessment> getAll(Long entryId);
+    List<EntryAssessment> findEntryAssessmentByEntry_Id(Long entryId);
 
-    void delete(Long id);
-
-    Long getFreeId();
 }

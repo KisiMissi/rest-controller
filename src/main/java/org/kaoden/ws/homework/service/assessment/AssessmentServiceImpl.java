@@ -3,6 +3,7 @@ package org.kaoden.ws.homework.service.assessment;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
 import org.kaoden.ws.homework.service.assessment.argument.CreateAssessmentArgument;
@@ -18,10 +19,9 @@ public class AssessmentServiceImpl implements AssessmentService {
     final AssessmentRepository repository;
 
     @Override
-    public EntryAssessment create(Long entryId, CreateAssessmentArgument argument) {
-        return repository.create(EntryAssessment.builder()
-                                                .id(repository.getFreeId())
-                                                .entryId(entryId)
+    public EntryAssessment create(Entry entry, CreateAssessmentArgument argument) {
+        return repository.save(EntryAssessment.builder()
+                                                .entry(entry)
                                                 .value(argument.getValue())
                                                 .comment(argument.getComment())
                                                 .build());
@@ -29,11 +29,11 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public List<EntryAssessment> getAll(Long entryId) {
-        return repository.getAll(entryId);
+        return repository.findEntryAssessmentByEntry_Id(entryId);
     }
 
     @Override
     public void delete(Long assessmentId) {
-        repository.delete(assessmentId);
+        repository.deleteById(assessmentId);
     }
 }

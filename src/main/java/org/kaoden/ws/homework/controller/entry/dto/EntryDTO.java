@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Data
@@ -20,5 +22,5 @@ public class EntryDTO {
     @Schema(name = "Entry description")
     String description;
     @Schema(name = "Entry link")
-    String link;
+    List<String> links;
 }

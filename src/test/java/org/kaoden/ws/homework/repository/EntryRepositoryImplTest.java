@@ -6,7 +6,6 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
-import org.kaoden.ws.homework.repository.entry.EntryRepositoryImpl;
 
 import java.util.List;
 

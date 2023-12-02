@@ -30,8 +30,9 @@ public class AssessmentController {
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(description = "Creating new assessment for entry")
-    public AssessmentDto create(@Valid @RequestBody CreateAssessmentDto assessment) {
-        return mapper.toDto(assessmentAction.addAssessment(assessment.getEntryId(), mapper.toModel(assessment)));
+    public AssessmentDto create(@RequestParam(name = "entryId") Long entryId,
+                                @Valid @RequestBody CreateAssessmentDto assessment) {
+        return mapper.toDto(assessmentAction.addAssessment(entryId, mapper.toModel(assessment)));
     }
 
     @GetMapping("all")

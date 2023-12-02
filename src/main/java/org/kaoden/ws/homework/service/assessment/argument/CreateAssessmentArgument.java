@@ -2,6 +2,7 @@ package org.kaoden.ws.homework.service.assessment.argument;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.kaoden.ws.homework.model.Entry;
 
 @Data
 @Builder
@@ -9,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateAssessmentArgument {
-    Long entryId;
+    Entry entry;
     Integer value;
     String comment;
 }
