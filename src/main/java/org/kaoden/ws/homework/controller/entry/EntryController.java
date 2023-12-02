@@ -32,8 +32,9 @@ public class EntryController {
 
     @GetMapping("all")
     @Operation(description = "Return all entries from the storage or entries by name")
-    public List<EntryDTO> getAll(@RequestParam(required = false) String name) {
-        return mapper.toDTOList(service.getAll(name));
+    public List<EntryDTO> getAll(@RequestParam(required = false) String name,
+                                 @RequestParam(required = false) String description) {
+        return mapper.toDTOList(service.getAll(name, description));
     }
 
     @GetMapping("{id}")

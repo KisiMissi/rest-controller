@@ -11,4 +11,8 @@ public interface EntryRepository extends JpaRepository<Entry, Long> {
 
     List<Entry> findEntriesByDescription(String description);
 
+    List<Entry> findEntriesByNameContainingIgnoreCase(String name);
+
+    List<Entry> findEntriesByDescriptionContainingIgnoreCase(String description);
+
 }

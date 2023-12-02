@@ -32,8 +32,16 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public List<Entry> getAll(String searchText) {
-        return searchText == null ? repository.findAll() : repository.findEntriesByName(searchText);
+    public List<Entry> getAll(String name, String description) {
+        if (name != null) {
+            return repository.findEntriesByNameContainingIgnoreCase(name);
+        }
+        else if (description != null) {
+            return repository.findEntriesByDescriptionContainingIgnoreCase(description);
+        }
+        else {
+            return repository.findAll();
+        }
     }
 
     @Override

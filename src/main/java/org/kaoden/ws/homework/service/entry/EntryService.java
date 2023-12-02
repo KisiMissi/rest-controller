@@ -13,7 +13,7 @@ public interface EntryService {
 
     Entry getExisting(Long id);
 
-    List<Entry> getAll(String searchText);
+    List<Entry> getAll(String name, String description);
 
     Entry update(Long id, UpdateEntryArgument entry);
 
