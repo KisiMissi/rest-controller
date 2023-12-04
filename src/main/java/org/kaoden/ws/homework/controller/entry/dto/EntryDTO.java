@@ -17,10 +17,13 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 public class EntryDTO {
     @Schema(name = "Entry ID in storage", requiredMode = REQUIRED)
     Long id;
+
     @Schema(name = "Entry name", requiredMode = REQUIRED)
     String name;
+
     @Schema(name = "Entry description")
     String description;
+
     @Schema(name = "Entry link")
     List<String> links;
 }

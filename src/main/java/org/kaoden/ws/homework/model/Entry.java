@@ -20,7 +20,6 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 @FieldDefaults(level = PRIVATE)
 public class Entry {
-
     @Id
     @GeneratedValue
     Long id;
@@ -35,5 +34,4 @@ public class Entry {
     @CollectionTable(name = "entry_links", joinColumns = @JoinColumn(table = "entry_id"))
     @Column(name = "links")
     List<String> links;
-
 }

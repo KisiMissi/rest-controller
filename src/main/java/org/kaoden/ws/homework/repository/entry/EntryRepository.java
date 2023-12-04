@@ -1,18 +1,14 @@
 package org.kaoden.ws.homework.repository.entry;
 
 import org.kaoden.ws.homework.model.Entry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface EntryRepository extends JpaRepository<Entry, Long> {
 
-    List<Entry> findEntriesByName(String name);
+    Page<Entry> findEntriesByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    List<Entry> findEntriesByDescription(String description);
-
-    List<Entry> findEntriesByNameContainingIgnoreCase(String name);
-
-    List<Entry> findEntriesByDescriptionContainingIgnoreCase(String description);
+    Page<Entry> findEntriesByDescriptionContainingIgnoreCase(String description, Pageable pageable);
 
 }

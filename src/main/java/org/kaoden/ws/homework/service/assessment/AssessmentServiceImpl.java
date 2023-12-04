@@ -7,9 +7,9 @@ import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
 import org.kaoden.ws.homework.service.assessment.argument.CreateAssessmentArgument;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +21,17 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public EntryAssessment create(Entry entry, CreateAssessmentArgument argument) {
         return repository.save(EntryAssessment.builder()
-                                                .entry(entry)
-                                                .value(argument.getValue())
-                                                .comment(argument.getComment())
-                                                .build());
+                                              .entry(entry)
+                                              .value(argument.getValue())
+                                              .comment(argument.getComment())
+                                              .build());
     }
 
     @Override
-    public List<EntryAssessment> getAll(Long entryId) {
-        return repository.findEntryAssessmentByEntry_Id(entryId);
+    public Page<EntryAssessment> getAll(Long entryId, Integer value, Pageable pageable) {
+        return value != null
+                ? repository.findEntryAssessmentByEntry_IdAndValue(entryId, value, pageable)
+                : repository.findEntryAssessmentByEntry_Id(entryId, pageable);
     }
 
     @Override

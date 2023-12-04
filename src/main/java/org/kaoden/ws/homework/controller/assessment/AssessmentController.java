@@ -11,10 +11,14 @@ import org.kaoden.ws.homework.controller.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.dto.CreateAssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.mapper.AssessmentMapper;
 import org.kaoden.ws.homework.service.assessment.AssessmentService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,8 +41,10 @@ public class AssessmentController {
 
     @GetMapping("all")
     @Operation(description = "Getting all assessments for the entry")
-    public List<AssessmentDto> getAll(@RequestParam(name = "entryId") Long entryId) {
-        return mapper.toDtoList(service.getAll(entryId));
+    public List<AssessmentDto> getAll(@RequestParam(name = "entryId") Long entryId,
+                                      @RequestParam(required = false) Integer value,
+                                      @PageableDefault(sort = {"value"}, direction = DESC) Pageable pageable) {
+        return mapper.toDtoList(service.getAll(entryId, value, pageable));
     }
 
     @PostMapping("delete")

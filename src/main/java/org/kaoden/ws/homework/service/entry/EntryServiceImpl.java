@@ -6,9 +6,9 @@ import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +32,15 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public List<Entry> getAll(String name, String description) {
+    public Page<Entry> getAll(String name, String description, Pageable pageable) {
         if (name != null) {
-            return repository.findEntriesByNameContainingIgnoreCase(name);
+            return repository.findEntriesByNameContainingIgnoreCase(name, pageable);
         }
         else if (description != null) {
-            return repository.findEntriesByDescriptionContainingIgnoreCase(description);
+            return repository.findEntriesByDescriptionContainingIgnoreCase(description, pageable);
         }
         else {
-            return repository.findAll();
+            return repository.findAll(pageable);
         }
     }
 
