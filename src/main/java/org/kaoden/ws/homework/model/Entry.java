@@ -21,13 +21,13 @@ import static lombok.AccessLevel.PROTECTED;
 @FieldDefaults(level = PRIVATE)
 public class Entry {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column
+    @Column(nullable = false)
     String name;
 
-    @Column
+    @Column(nullable = false)
     String description;
 
     @ElementCollection

@@ -17,7 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Schema(description = "Assessment of the entry")
 public class EntryAssessment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne

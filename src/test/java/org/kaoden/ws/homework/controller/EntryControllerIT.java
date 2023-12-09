@@ -1,9 +1,8 @@
 package org.kaoden.ws.homework.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.controller.entry.dto.CreateEntryDTO;
 import org.kaoden.ws.homework.controller.entry.dto.EntryDTO;
@@ -11,188 +10,228 @@ import org.kaoden.ws.homework.controller.entry.dto.UpdateEntryDTO;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@Testcontainers
+@AutoConfigureWebTestClient
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class EntryControllerIT {
 
     static final String URL = "entries";
-    static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
-    static final ObjectWriter WRITER = new ObjectMapper().writer();
+
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
 
     @Autowired
-    MockMvc mockMvc;
+    WebTestClient client;
     @Autowired
     EntryRepository repository;
 
-    private Entry getEntry(Long id, String name) {
+    @BeforeEach
+    void setRepository() {
+        repository.deleteAll();
+    }
+
+    private Entry getEntry(String name) {
         return Entry.builder()
-                    .id(id)
                     .name(name)
                     .description("test-description")
-                    .link("test-link")
+                    .links(List.of("test-link"))
                     .build();
     }
 
-    private EntryDTO getEntryDto(Long id, String name) {
-        return EntryDTO.builder()
-                       .id(id)
-                       .name(name)
-                       .description("test-description")
-                       .link("test-link")
-                       .build();
-    }
-
     @Test
-    void createEntryInRep() throws Exception {
+    void createEntryInRep() {
         // Arrange
-        String createEntry = WRITER.writeValueAsString(CreateEntryDTO.builder()
-                                                                     .name("test")
-                                                                     .description("test-description")
-                                                                     .link("test-link")
-                                                                     .build());
-        String expectedEntry = WRITER.writeValueAsString(getEntry(0L, "test"));
+        CreateEntryDTO entryToCreate = CreateEntryDTO.builder()
+                                                     .name("test")
+                                                     .description("test-description")
+                                                     .links(List.of("test-link"))
+                                                     .build();
 
         // Act
-        MvcResult result = mockMvc.perform(post("/{url}/create", URL)
-                                          .contentType(APPLICATION_JSON_UTF8)
-                                          .content(createEntry))
-                                  .andDo(print())
-                                  .andExpect(status().isCreated())
-                                  .andReturn();
+        EntityExchangeResult<EntryDTO> result = client.post()
+                                                      .uri("/{url}/create", URL)
+                                                      .bodyValue(entryToCreate)
+                                                      .exchange()
+                                                      .expectStatus()
+                                                      .isCreated()
+                                                      .expectBody(EntryDTO.class)
+                                                      .returnResult();
+
 
         // Assert
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedEntry);
+        EntryDTO resultEntry = result.getResponseBody();
+        assertThat(resultEntry.getName()).isEqualTo("test");
+        assertThat(resultEntry.getDescription()).isEqualTo("test-description");
+        assertThat(resultEntry.getLinks()).isEqualTo(List.of("test-link"));
     }
 
     @Test
-    void getAllEntries() throws Exception {
+    void getAllEntries() {
         // Arrange
         String name1 = "test-1";
         String name2 = "test-2";
-        Entry entry1 = getEntry(0L, name1);
-        Entry entry2 = getEntry(1L, name2);
-        repository.create(entry1);
-        repository.create(entry2);
-        String expectedList = WRITER.writeValueAsString(List.of(entry1, entry2));
+        Entry entry1 = getEntry(name1);
+        Entry entry2 = getEntry(name2);
+        repository.save(entry1);
+        repository.save(entry2);
 
         // Act
-        MvcResult result = mockMvc.perform(get("/{url}/all", URL))
-                                  .andDo(print())
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+        EntityExchangeResult<List<EntryDTO>> result = client.get()
+                                                            .uri("/{url}/all", URL)
+                                                            .exchange()
+                                                            .expectStatus()
+                                                            .isOk()
+                                                            .expectBodyList(EntryDTO.class)
+                                                            .returnResult();
 
         // Assert
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedList);
+        assertThat(result.getResponseBody()).hasSize(2);
     }
 
     @Test
-    void searchByName() throws Exception {
+    void searchByNameShouldReturnTwoEntries() {
         // Arrange
         String name1 = "test-1";
         String name2 = "test-2";
         String name3 = "tEsT-2";
-        Entry entry1 = getEntry(0L, name1);
-        Entry entry2 = getEntry(1L, name2);
-        Entry entry3 = getEntry(2L, name3);
-        repository.create(entry1);
-        repository.create(entry2);
-        repository.create(entry3);
-        String expectedList = WRITER.writeValueAsString(List.of(entry2, entry3));
-
+        Entry entry1 = getEntry(name1);
+        Entry entry2 = getEntry(name2);
+        Entry entry3 = getEntry(name3);
+        repository.save(entry1);
+        repository.save(entry2);
+        repository.save(entry3);
 
         // Act
-        MvcResult result = mockMvc.perform(get("/{url}/all?name={name}", URL, name2))
-                                  .andDo(print())
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+        EntityExchangeResult<List<EntryDTO>> result = client.get()
+                                                            .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                                         .path("/all")
+                                                                                         .queryParam("name", name2)
+                                                                                         .build())
+                                                            .exchange()
+                                                            .expectBodyList(EntryDTO.class)
+                                                            .returnResult();
 
         // Assert
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedList);
+        assertThat(result.getResponseBody()).hasSize(2);
     }
 
     @Test
-    void searchEntryById() throws Exception {
+    void searchByDescriptionShouldReturnTwoEntries() {
         // Arrange
-        Long id = 0L;
+        String description = "test-description-one";
+        String description2 = "TeSt-DeScRipTioN-ONE";
+        Entry entryToSave = Entry.builder()
+                                 .name("test")
+                                 .description(description)
+                                 .links(List.of("test-link"))
+                                 .build();
+        Entry entryToSave2 = Entry.builder()
+                                  .name("test-2")
+                                  .description(description2)
+                                  .links(List.of("test-link"))
+                                  .build();
+        repository.save(entryToSave);
+        repository.save(entryToSave2);
+
+        // Act
+        EntityExchangeResult<List<EntryDTO>> result = client.get()
+                                                            .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                               .path("/all")
+                                                                               .queryParam("description", description)
+                                                                               .build())
+                                                            .exchange()
+                                                            .expectBodyList(EntryDTO.class)
+                                                            .returnResult();
+
+        // Assert
+        assertThat(result.getResponseBody()).hasSize(2);
+    }
+
+    @Test
+    void searchEntryById() {
+        // Arrange
         String name = "test";
-        String expectedEntry = WRITER.writeValueAsString(getEntryDto(id, name));
-        repository.create(getEntry(id, "test"));
+        Entry entryToSave = getEntry(name);
+        Entry savedEntry = repository.save(entryToSave);
+        Long id = savedEntry.getId();
 
         // Act
-        MvcResult result = mockMvc.perform(get("/{url}/{id}", URL, id))
-                                  .andDo(print())
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+        EntityExchangeResult<EntryDTO> result = client.get()
+                                                      .uri("/{url}/{id}", URL, id)
+                                                      .exchange()
+                                                      .expectBody(EntryDTO.class)
+                                                      .returnResult();
 
         // Assert
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedEntry);
+        assertThat(result.getResponseBody()
+                         .getId()).isEqualTo(savedEntry.getId());
     }
 
     @Test
-    void updateEntry() throws Exception {
+    void updateEntry() {
         // Arrange
-        Long id = 0L;
-        String updateEntry = WRITER.writeValueAsString(UpdateEntryDTO.builder()
-                                                                     .name("test-update")
-                                                                     .description("update-description")
-                                                                     .link("update-link")
-                                                                     .build());
-        Entry expectedEntryObj = Entry.builder()
-                                      .id(id)
-                                      .name("test-update")
-                                      .description("update-description")
-                                      .link("update-link")
-                                      .build();
-        String expectedEntry = WRITER.writeValueAsString(expectedEntryObj);
-        repository.create(expectedEntryObj);
+        Entry entryToSave = Entry.builder()
+                                 .name("test")
+                                 .description("test-description")
+                                 .links(List.of("test-link"))
+                                 .build();
+        Entry savedEntry = repository.save(entryToSave);
+        Long id = savedEntry.getId();
+        UpdateEntryDTO updateEntryDTO = UpdateEntryDTO.builder()
+                                                      .name("test-update")
+                                                      .description("update-description")
+                                                      .links(List.of("update-link"))
+                                                      .build();
+        EntryDTO expectedEntry = EntryDTO.builder()
+                                         .id(id)
+                                         .name("test-update")
+                                         .description("update-description")
+                                         .links(List.of("update-link"))
+                                         .build();
 
         // Act
-        MvcResult result = mockMvc.perform(post("/{url}/{id}/update", URL, id)
-                                          .contentType(APPLICATION_JSON_UTF8)
-                                          .content(updateEntry))
-                                  .andDo(print())
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+        EntityExchangeResult<EntryDTO> result = client.post()
+                                                      .uri("/{url}/{id}/update", URL, id)
+                                                      .bodyValue(updateEntryDTO)
+                                                      .exchange()
+                                                      .expectStatus()
+                                                      .isOk()
+                                                      .expectBody(EntryDTO.class)
+                                                      .returnResult();
 
         // Assert
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedEntry);
+        assertThat(result.getResponseBody()).isEqualTo(expectedEntry);
     }
 
     @Test
-    void deleteEntry() throws Exception {
+    void deleteEntry() {
         // Arrange
-        Long id = 0L;
-        repository.create(getEntry(id, "test"));
+        Entry savedEntry = repository.save(getEntry("test"));
+        Long id = savedEntry.getId();
 
         // Assert
-        mockMvc.perform(post("/{url}/{id}/delete", URL, id))
-               .andDo(print())
-               .andExpect(status().isOk());
+        client.post()
+              .uri("/{url}/{id}/delete", URL, id)
+              .exchange()
+              .expectStatus()
+              .isOk();
+
+        // Assert
+        assertThat(repository.existsById(id)).isFalse();
     }
 }
