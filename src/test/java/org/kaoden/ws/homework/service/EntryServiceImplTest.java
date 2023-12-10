@@ -125,10 +125,10 @@ class EntryServiceImplTest {
         when(repository.findById(id)).thenReturn(Optional.of(testEntry));
 
         // Act
-        Entry actualEntry = service.update(id, argument);
+        service.update(id, argument);
 
         // Assert
-        assertThat(actualEntry).isEqualTo(expectedEntry);
+        verify(repository).save(expectedEntry);
     }
 
     @Test
