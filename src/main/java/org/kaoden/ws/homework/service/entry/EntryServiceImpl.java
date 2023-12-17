@@ -48,8 +48,7 @@ public class EntryServiceImpl implements EntryService {
     @Override
     @Transactional
     public Entry update(Long id, UpdateEntryArgument entry) {
-        Entry updateEntry = repository.findById(id)
-                                      .orElseThrow(() -> new NotFoundException("Impossible update entry with this ID: " + id));
+        Entry updateEntry = getExisting(id);
 
         updateEntry.setName(entry.getName());
         updateEntry.setDescription(entry.getDescription());

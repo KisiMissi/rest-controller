@@ -5,6 +5,7 @@ import org.kaoden.ws.homework.controller.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.dto.CreateAssessmentDto;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface AssessmentMapper {
 
     CreateAssessmentActionArgument toModel(CreateAssessmentDto dto);
 
+    @Mapping(target = "entryDto", source = "entry")
     AssessmentDto toDto(EntryAssessment assessment);
 
     List<AssessmentDto> toDtoList(Page<EntryAssessment> assessmentList);

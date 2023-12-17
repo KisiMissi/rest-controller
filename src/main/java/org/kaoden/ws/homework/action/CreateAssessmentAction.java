@@ -20,7 +20,8 @@ public class CreateAssessmentAction {
     final EntryService entryService;
     final AssessmentService assessmentService;
 
-    public EntryAssessment addAssessment(Long entryId, CreateAssessmentActionArgument argument) {
+    public EntryAssessment addAssessment(CreateAssessmentActionArgument argument) {
+        Long entryId = argument.getEntryId();
         if (!entryService.exists(entryId)) {
             throw new NotFoundException("Entry with that ID: " + entryId + " doesn't exist");
         }

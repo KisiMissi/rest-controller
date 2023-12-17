@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateAssessmentActionArgument {
+    Long entryId;
     Integer value;
     String comment;
 }

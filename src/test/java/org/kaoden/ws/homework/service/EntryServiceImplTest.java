@@ -9,10 +9,7 @@ import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.kaoden.ws.homework.service.entry.EntryServiceImpl;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
@@ -41,6 +38,9 @@ class EntryServiceImplTest {
     @InjectMocks
     EntryServiceImpl service;
 
+    @Captor
+    ArgumentCaptor<Entry> argumentCaptor;
+
     @BeforeEach
     void setMockitoAnnotations() {
         MockitoAnnotations.openMocks(this);
@@ -61,6 +61,12 @@ class EntryServiceImplTest {
         Entry actualEntry = service.create(argument);
 
         // Assert
+        verify(repository).save(argumentCaptor.capture());
+        Entry argumentCaptorValue = argumentCaptor.getValue();
+        assertThat(argumentCaptorValue.getName()).isEqualTo("test");
+        assertThat(argumentCaptorValue.getDescription()).isEqualTo("test-description");
+        assertThat(argumentCaptorValue.getLinks()).isEqualTo(List.of("test-link", "test-link-2"));
+
         assertThat(actualEntry).isEqualTo(mockEntry);
         verifyNoInteractions(mockEntry);
     }
