@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "DTO to create assessment of the Entry")
 public class CreateAssessmentDto {
+
     @NotNull(message = "Assessment must have entry id")
     Long entryId;
 

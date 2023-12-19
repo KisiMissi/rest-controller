@@ -9,15 +9,16 @@ import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.kaoden.ws.homework.service.entry.EntryServiceImpl;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -27,13 +28,18 @@ class EntryServiceImplTest {
                                  .id(0L)
                                  .name("test")
                                  .description("test-description")
-                                 .link("test-link")
+                                 .links(List.of("test-link"))
                                  .build();
 
+    @Mock
+    Pageable pageable;
     @Mock
     EntryRepository repository;
     @InjectMocks
     EntryServiceImpl service;
+
+    @Captor
+    ArgumentCaptor<Entry> argumentCaptor;
 
     @BeforeEach
     void setMockitoAnnotations() {
@@ -46,15 +52,21 @@ class EntryServiceImplTest {
         CreateEntryArgument argument = CreateEntryArgument.builder()
                                                           .name("test")
                                                           .description("test-description")
-                                                          .link("test-link")
+                                                          .links(List.of("test-link", "test-link-2"))
                                                           .build();
         Entry mockEntry = Mockito.mock(Entry.class);
-        when(repository.create(testEntry)).thenReturn(mockEntry);
+        when(repository.save(any(Entry.class))).thenReturn(mockEntry);
 
         // Act
         Entry actualEntry = service.create(argument);
 
         // Assert
+        verify(repository).save(argumentCaptor.capture());
+        Entry argumentCaptorValue = argumentCaptor.getValue();
+        assertThat(argumentCaptorValue.getName()).isEqualTo("test");
+        assertThat(argumentCaptorValue.getDescription()).isEqualTo("test-description");
+        assertThat(argumentCaptorValue.getLinks()).isEqualTo(List.of("test-link", "test-link-2"));
+
         assertThat(actualEntry).isEqualTo(mockEntry);
         verifyNoInteractions(mockEntry);
     }
@@ -63,8 +75,7 @@ class EntryServiceImplTest {
     void getExistingEntryById() {
         // Arrange
         Long id = 0L;
-        when(repository.exists(id)).thenReturn(true);
-        when(repository.findById(id)).thenReturn(testEntry);
+        when(repository.findById(id)).thenReturn(Optional.of(testEntry));
 
         // Act
         Entry actualEntry = service.getExisting(id);
@@ -78,11 +89,11 @@ class EntryServiceImplTest {
         // Arrange
         String name = "Test";
         List<Entry> expectedList = Collections.singletonList(testEntry);
-        when(repository.exists(0L)).thenReturn(true);
-        when(repository.findByName(name)).thenReturn(expectedList);
+        when(repository.findEntriesByNameContainingIgnoreCase(name, pageable)).thenReturn(new PageImpl<>(expectedList));
 
         // Act
-        List<Entry> actualList = service.getAll(name);
+        List<Entry> actualList = service.getAll(name, null, pageable)
+                                        .toList();
 
         // Assert
         assertThat(actualList).isEqualTo(expectedList);
@@ -92,10 +103,11 @@ class EntryServiceImplTest {
     void getAllEntries() {
         // Arrange
         List<Entry> expectedList = Collections.singletonList(testEntry);
-        when(repository.getAll()).thenReturn(expectedList);
+        when(repository.findAll(pageable)).thenReturn(new PageImpl<>(expectedList));
 
         // Act
-        List<Entry> actualList = service.getAll(null);
+        List<Entry> actualList = service.getAll(null, null, pageable)
+                                        .toList();
 
         // Assert
         assertThat(actualList).isEqualTo(expectedList);
@@ -108,34 +120,33 @@ class EntryServiceImplTest {
         UpdateEntryArgument argument = UpdateEntryArgument.builder()
                                                           .name("test-update")
                                                           .description("test-description")
-                                                          .link("test-link")
+                                                          .links(List.of("test-link"))
                                                           .build();
         Entry expectedEntry = Entry.builder()
                                    .id(id)
                                    .name("test-update")
                                    .description("test-description")
-                                   .link("test-link")
+                                   .links(List.of("test-link"))
                                    .build();
-        when(repository.exists(id)).thenReturn(true);
-        when(repository.update(id, expectedEntry)).thenReturn(expectedEntry);
+        when(repository.findById(id)).thenReturn(Optional.of(testEntry));
 
         // Act
-        Entry actualEntry = service.update(id, argument);
+        service.update(id, argument);
 
         // Assert
-        assertThat(actualEntry).isEqualTo(expectedEntry);
+        verify(repository).save(expectedEntry);
     }
 
     @Test
     void deleteEntry() {
         // Arrange
         Long id = 0L;
-        when(repository.exists(id)).thenReturn(true);
+        when(repository.existsById(id)).thenReturn(true);
 
         // Act
         service.delete(id);
 
         // Assert
-        verify(repository).delete(id);
+        verify(repository).deleteById(id);
     }
 }

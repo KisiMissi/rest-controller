@@ -3,12 +3,13 @@ package org.kaoden.ws.homework.service.assessment;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
 import org.kaoden.ws.homework.service.assessment.argument.CreateAssessmentArgument;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,22 +19,23 @@ public class AssessmentServiceImpl implements AssessmentService {
     final AssessmentRepository repository;
 
     @Override
-    public EntryAssessment create(Long entryId, CreateAssessmentArgument argument) {
-        return repository.create(EntryAssessment.builder()
-                                                .id(repository.getFreeId())
-                                                .entryId(entryId)
-                                                .value(argument.getValue())
-                                                .comment(argument.getComment())
-                                                .build());
+    public EntryAssessment create(Entry entry, CreateAssessmentArgument argument) {
+        return repository.save(EntryAssessment.builder()
+                                              .entry(entry)
+                                              .value(argument.getValue())
+                                              .comment(argument.getComment())
+                                              .build());
     }
 
     @Override
-    public List<EntryAssessment> getAll(Long entryId) {
-        return repository.getAll(entryId);
+    public Page<EntryAssessment> getAll(Long entryId, Integer value, Pageable pageable) {
+        return value != null
+                ? repository.findEntryAssessmentByEntry_IdAndValue(entryId, value, pageable)
+                : repository.findEntryAssessmentByEntry_Id(entryId, pageable);
     }
 
     @Override
     public void delete(Long assessmentId) {
-        repository.delete(assessmentId);
+        repository.deleteById(assessmentId);
     }
 }

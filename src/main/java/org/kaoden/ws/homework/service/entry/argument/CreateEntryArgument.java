@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateEntryArgument {
     String name;
     String description;
-    String link;
+    List<String> links;
 }

@@ -9,6 +9,8 @@ import org.kaoden.ws.homework.controller.entry.dto.EntryDTO;
 import org.kaoden.ws.homework.controller.entry.dto.UpdateEntryDTO;
 import org.kaoden.ws.homework.controller.entry.mapper.EntryMapper;
 import org.kaoden.ws.homework.service.entry.EntryService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +34,10 @@ public class EntryController {
 
     @GetMapping("all")
     @Operation(description = "Return all entries from the storage or entries by name")
-    public List<EntryDTO> getAll(@RequestParam(required = false) String name) {
-        return mapper.toDTOList(service.getAll(name));
+    public List<EntryDTO> getAll(@RequestParam(required = false) String name,
+                                 @RequestParam(required = false) String description,
+                                 @PageableDefault(sort = {"name"}) Pageable pageable) {
+        return mapper.toDTOList(service.getAll(name, description, pageable));
     }
 
     @GetMapping("{id}")

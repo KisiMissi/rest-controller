@@ -1,0 +1,29 @@
+{
+  "entry": [
+    {
+      "id": 1,
+      "name": "test",
+      "description": "test-description"
+    }
+  ],
+  "entry_links": [
+    {
+      "entry_id": 1,
+      "links": "test-link"
+    }
+  ],
+  "assessment": [
+    {
+      "id": 1,
+      "entry_id": 1,
+      "value": 1,
+      "comment": "test-1"
+    },
+    {
+      "id": 2,
+      "entry_id": 1,
+      "value": 5,
+      "comment": "test-5"
+    }
+  ]
+}

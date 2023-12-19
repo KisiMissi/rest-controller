@@ -26,7 +26,7 @@ class UpdateEntryDTOValidationTest {
         // Arrange
         UpdateEntryDTO entryDTO = UpdateEntryDTO.builder()
                                                 .description("test-description")
-                                                .link("test-link")
+                                                .links(List.of("test-link", "test-link-2"))
                                                 .build();
 
         // Act
@@ -45,7 +45,7 @@ class UpdateEntryDTOValidationTest {
         // Arrange
         UpdateEntryDTO entryDTO = UpdateEntryDTO.builder()
                                                 .name("test")
-                                                .link("test-link")
+                                                .links(List.of("test-link", "test-link2"))
                                                 .build();
 
         // Act
@@ -75,7 +75,7 @@ class UpdateEntryDTOValidationTest {
                                              .toList();
 
         // Assert
-        assertThat(failedFields).isEqualTo(Lists.newArrayList("link"));
+        assertThat(failedFields).isEqualTo(Lists.newArrayList("links"));
     }
 
     @Test
@@ -92,7 +92,7 @@ class UpdateEntryDTOValidationTest {
                                              .toList();
 
         // Assert
-        assertThat(failedFields).isEqualTo(Lists.newArrayList("description", "link", "name"));
+        assertThat(failedFields).isEqualTo(Lists.newArrayList("description", "links", "name"));
     }
 
 }

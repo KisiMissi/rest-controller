@@ -1,138 +1,158 @@
 package org.kaoden.ws.homework.controller.assessment;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import com.github.database.rider.junit5.DBUnitExtension;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.kaoden.ws.homework.controller.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.dto.CreateAssessmentDto;
-import org.kaoden.ws.homework.model.Entry;
-import org.kaoden.ws.homework.model.EntryAssessment;
-import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
-import org.kaoden.ws.homework.repository.entry.EntryRepository;
-import org.mockito.Mockito;
+import org.kaoden.ws.homework.controller.entry.dto.EntryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static lombok.AccessLevel.PRIVATE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+import static lombok.AccessLevel.PRIVATE;
+
+@ExtendWith(DBUnitExtension.class)
+@Testcontainers
+@AutoConfigureWebTestClient
 @FieldDefaults(level = PRIVATE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AssessmentControllerIT {
 
     static final String URL = "assessment";
-    static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
-    static final ObjectWriter WRITER = new ObjectMapper().writer();
+
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15");
 
     @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    EntryRepository entryRepository;
-    @Autowired
-    AssessmentRepository assessmentRepository;
+    WebTestClient client;
 
     @Test
-    void create() throws Exception {
+    @DataSet("assessment\\CREATE.json")
+    @ExpectedDataSet("assessment\\CREATE_EXPECTED.json")
+    void create() {
         // Arrange
-        entryRepository.create(Mockito.mock(Entry.class));
-        String testAssessment = WRITER.writeValueAsString(CreateAssessmentDto.builder()
-                                                                             .entryId(0L)
-                                                                             .value(1)
-                                                                             .comment("test-1")
-                                                                             .build());
-        String expectedAssessment = WRITER.writeValueAsString(AssessmentDto.builder()
-                                                                           .id(0L)
-                                                                           .entryId(0L)
-                                                                           .value(1)
-                                                                           .comment("test-1")
-                                                                           .build());
+        CreateAssessmentDto testAssessment = CreateAssessmentDto.builder()
+                                                                .entryId(1L)
+                                                                .value(1)
+                                                                .comment("test-comment")
+                                                                .build();
 
         // Act
-        MvcResult result = mockMvc.perform(post("/{url}/create", URL)
-                                          .contentType(APPLICATION_JSON_UTF8)
-                                          .content(testAssessment))
-                                  .andDo(print())
-                                  .andExpect(status().isCreated())
-                                  .andReturn();
-
-        // Assert
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedAssessment);
+        client.post()
+              .uri("{URL}/create", URL)
+              .bodyValue(testAssessment)
+              .exchange()
+              .expectStatus()
+              .isCreated();
     }
 
     @Test
-    void getAll() throws Exception {
+    @DataSet("assessment\\GET_ALL.json")
+    void getAll() {
         // Arrange
-        entryRepository.create(Mockito.mock(Entry.class));
-        assessmentRepository.create(EntryAssessment.builder()
-                                                   .id(0L)
-                                                   .entryId(0L)
-                                                   .value(1)
-                                                   .comment("test-1")
-                                                   .build());
-        assessmentRepository.create(EntryAssessment.builder()
-                                                   .id(1L)
-                                                   .entryId(0L)
-                                                   .value(5)
-                                                   .comment("test-5")
-                                                   .build());
+        Long entryId = 1L;
+        EntryDTO entryDTO = EntryDTO.builder()
+                                    .id(entryId)
+                                    .name("test")
+                                    .description("test-description")
+                                    .links(List.of("test-link"))
+                                    .build();
         AssessmentDto expectedAssessment1 = AssessmentDto.builder()
-                                                         .id(0L)
-                                                         .entryId(0L)
+                                                         .id(1L)
+                                                         .entryDto(entryDTO)
                                                          .value(1)
                                                          .comment("test-1")
                                                          .build();
         AssessmentDto expectedAssessment2 = AssessmentDto.builder()
-                                                         .id(1L)
-                                                         .entryId(0L)
+                                                         .id(2L)
+                                                         .entryDto(entryDTO)
                                                          .value(5)
                                                          .comment("test-5")
                                                          .build();
-        String expectedAssessmentList = WRITER.writeValueAsString(List.of(expectedAssessment1, expectedAssessment2));
 
         // Act
-        MvcResult result = mockMvc.perform(get("/{url}/all", URL)
-                                          .param("entryId", "0"))
-                                  .andDo(print())
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+        List<AssessmentDto> result = client.get()
+                                           .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                        .path("/all")
+                                                                        .queryParam("entryId", entryId)
+                                                                        .queryParam("sort", "id,asc")
+                                                                        .build())
+                                           .exchange()
+                                           .expectStatus()
+                                           .isOk()
+                                           .expectBodyList(AssessmentDto.class)
+                                           .returnResult()
+                                           .getResponseBody();
 
-        assertThat(result.getResponse()
-                         .getContentAsString())
-                .isEqualTo(expectedAssessmentList);
+        // Assert
+        assertThat(result).isNotEmpty();
+        assertThat(result).contains(expectedAssessment1);
+        assertThat(result).contains(expectedAssessment2);
     }
 
     @Test
-    void delete() throws Exception {
+    @DataSet("assessment\\GET_ALL_FILTERED.json")
+    void filteredGetAll() {
         // Arrange
-        assessmentRepository.create(EntryAssessment.builder()
-                                                   .id(0L)
-                                                   .entryId(0L)
-                                                   .value(1)
-                                                   .comment("test-1")
-                                                   .build());
+        Long entryId = 1L;
+        EntryDTO entryDTO = EntryDTO.builder()
+                                    .id(entryId)
+                                    .name("test")
+                                    .description("test-description")
+                                    .links(List.of("test-link"))
+                                    .build();
+        AssessmentDto expectedAssessment1 = AssessmentDto.builder()
+                                                         .id(2L)
+                                                         .entryDto(entryDTO)
+                                                         .value(5)
+                                                         .comment("test-5")
+                                                         .build();
 
         // Act
-        mockMvc.perform(post("/{url}/delete", URL)
-                       .param("id", "0"))
-               .andDo(print())
-               .andExpect(status().isOk());
+        List<AssessmentDto> result = client.get()
+                                                 .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                              .path("/all")
+                                                                              .queryParam("entryId", entryId)
+                                                                              .queryParam("value", 5)
+                                                                              .build())
+                                                 .exchange()
+                                                 .expectStatus()
+                                                 .isOk()
+                                                 .expectBodyList(AssessmentDto.class)
+                                                 .returnResult()
+                                                 .getResponseBody();
 
         // Assert
-        assertThat(assessmentRepository.getAll(0L)).isEmpty();
+        assertThat(result).hasSize(1);
+        assertThat(result).contains(expectedAssessment1);
+    }
+
+    @Test
+    @DataSet("assessment\\DELETE.json")
+    @ExpectedDataSet("assessment\\DELETE_EXPECTED.json")
+    void delete() {
+        // Act
+        client.post()
+              .uri(uriBuilder -> uriBuilder.path(URL)
+                                           .path("/delete")
+                                           .queryParam("id", 1L)
+                                           .build())
+              .exchange()
+              .expectStatus()
+              .isOk();
     }
 }

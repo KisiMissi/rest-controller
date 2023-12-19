@@ -1,11 +1,10 @@
 package org.kaoden.ws.homework.service.entry;
 
 import org.kaoden.ws.homework.model.Entry;
-
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface EntryService {
 
@@ -13,7 +12,7 @@ public interface EntryService {
 
     Entry getExisting(Long id);
 
-    List<Entry> getAll(String searchText);
+    Page<Entry> getAll(String name, String description, Pageable pageable);
 
     Entry update(Long id, UpdateEntryArgument entry);
 

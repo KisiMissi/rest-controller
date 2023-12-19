@@ -1,25 +1,14 @@
 package org.kaoden.ws.homework.repository.entry;
 
 import org.kaoden.ws.homework.model.Entry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface EntryRepository extends JpaRepository<Entry, Long> {
 
-public interface EntryRepository {
+    Page<Entry> findEntriesByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    Entry create(Entry entry);
-
-    Entry findById(Long id);
-
-    List<Entry> findByName(String name);
-
-    List<Entry> getAll();
-
-    Entry update(Long id, Entry entry);
-
-    void delete(Long id);
-
-    Long getFreeId();
-
-    Boolean exists(Long id);
+    Page<Entry> findEntriesByDescriptionContainingIgnoreCase(String description, Pageable pageable);
 
 }
