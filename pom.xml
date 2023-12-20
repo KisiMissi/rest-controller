@@ -21,6 +21,7 @@
     <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
     <postgresql.version>42.7.0</postgresql.version>
     <database.rider.version>1.41.0</database.rider.version>
+    <user.agent.utils.version>1.21</user.agent.utils.version>
   </properties>
 
   <parent>
@@ -76,6 +77,11 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${projectlombok.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>eu.bitwalker</groupId>
+      <artifactId>UserAgentUtils</artifactId>
+      <version>${user.agent.utils.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
     <dependency>

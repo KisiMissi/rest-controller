@@ -3,6 +3,7 @@ package org.kaoden.ws.homework.service.assessment;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.kaoden.ws.homework.annotation.SecurityAuditCreation;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
@@ -19,6 +20,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     final AssessmentRepository repository;
 
     @Override
+    @SecurityAuditCreation
     public EntryAssessment create(Entry entry, CreateAssessmentArgument argument) {
         return repository.save(EntryAssessment.builder()
                                               .entry(entry)
