@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.controller.entry.dto.CreateEntryDTO;
 import org.kaoden.ws.homework.controller.entry.dto.EntryDTO;
+import org.kaoden.ws.homework.controller.entry.dto.SearchEntryDTO;
 import org.kaoden.ws.homework.controller.entry.dto.UpdateEntryDTO;
 import org.kaoden.ws.homework.controller.entry.mapper.EntryMapper;
 import org.kaoden.ws.homework.service.entry.EntryService;
@@ -16,14 +18,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("entries")
 @Tag(name="Entry Service", description = "Handle requests")
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 public class EntryController {
 
-    private final EntryService service;
-    private final EntryMapper mapper;
+    EntryService service;
+    EntryMapper mapper;
 
     @PostMapping("create")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -34,10 +39,9 @@ public class EntryController {
 
     @GetMapping("all")
     @Operation(description = "Return all entries from the storage or entries by name")
-    public List<EntryDTO> getAll(@RequestParam(required = false) String name,
-                                 @RequestParam(required = false) String description,
+    public List<EntryDTO> getAll(@RequestBody SearchEntryDTO searchDto,
                                  @PageableDefault(sort = {"name"}) Pageable pageable) {
-        return mapper.toDTOList(service.getAll(name, description, pageable));
+        return mapper.toDTOList(service.getAll(mapper.toModel(searchDto), pageable));
     }
 
     @GetMapping("{id}")

@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.action.CreateAssessmentAction;
 import org.kaoden.ws.homework.controller.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.dto.CreateAssessmentDto;
+import org.kaoden.ws.homework.controller.assessment.dto.SearchAssessmentDto;
 import org.kaoden.ws.homework.controller.assessment.mapper.AssessmentMapper;
 import org.kaoden.ws.homework.service.assessment.AssessmentService;
 import org.springframework.data.domain.Pageable;
@@ -40,10 +41,9 @@ public class AssessmentController {
 
     @GetMapping("all")
     @Operation(description = "Getting all assessments for the entry")
-    public List<AssessmentDto> getAll(@RequestParam(name = "entryId") Long entryId,
-                                      @RequestParam(required = false) Integer value,
+    public List<AssessmentDto> getAll(@Valid @RequestBody SearchAssessmentDto searchDto,
                                       @PageableDefault(sort = {"value"}, direction = DESC) Pageable pageable) {
-        return mapper.toDtoList(service.getAll(entryId, value, pageable));
+        return mapper.toDtoList(service.getAll(mapper.toModel(searchDto), pageable));
     }
 
     @PostMapping("delete")

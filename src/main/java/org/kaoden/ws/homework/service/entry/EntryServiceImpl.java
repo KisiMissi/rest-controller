@@ -5,6 +5,7 @@ import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.SearchEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,10 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public Page<Entry> getAll(String name, String description, Pageable pageable) {
+    public Page<Entry> getAll(SearchEntryArgument searchArgument, Pageable pageable) {
+        String name = searchArgument.getName();
+        String description = searchArgument.getDescription();
+
         if (name != null) {
             return repository.findEntriesByNameContainingIgnoreCase(name, pageable);
         }
