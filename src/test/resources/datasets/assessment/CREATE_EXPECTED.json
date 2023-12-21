@@ -19,5 +19,13 @@
       "value": 1,
       "comment": "test-comment"
     }
+  ],
+  "security_audit": [
+    {
+      "id": "regex:.+",
+      "assessment_id": 1,
+      "info": "ip: 127.0.0.1, user-agent: ReactorNetty/1.1.9",
+      "created_at": "regex:.+"
+    }
   ]
 }

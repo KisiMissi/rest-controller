@@ -36,7 +36,7 @@ public class SecurityAuditServiceImpl implements SecurityAuditService {
         if (info == null || info.isBlank()) {
             throw new SearchSecurityAuditException("No info for searching");
         }
-        return repository.findAllByInfo(info, pageable);
+        return repository.findAllByInfoContainingIgnoreCase(info, pageable);
     }
 
     @Override

@@ -5,10 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.net.InetAddress;
-
 public interface SecurityAuditRepository extends JpaRepository<SecurityAudit, Long> {
 
-    Page<SecurityAudit> findAllByInfo(String info, Pageable pageable);
+    Page<SecurityAudit> findAllByInfoContainingIgnoreCase(String info, Pageable pageable);
 
 }

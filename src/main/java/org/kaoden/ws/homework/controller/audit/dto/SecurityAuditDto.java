@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -14,6 +14,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "DTO to return Security Audit of the Entry Assessment")
 public class SecurityAuditDto {
     @Schema(name = "Security audit's id in storage", requiredMode = REQUIRED)
     Long id;
@@ -22,6 +23,6 @@ public class SecurityAuditDto {
     @Schema(name = "IP address for sending a request to create an assessment", requiredMode = REQUIRED)
     String info;
     @Schema(name = "Date of security audit creation", requiredMode = REQUIRED)
-    Date createdAt;
+    LocalDateTime createdAt;
 
 }

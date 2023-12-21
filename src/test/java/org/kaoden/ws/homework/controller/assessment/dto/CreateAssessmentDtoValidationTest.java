@@ -23,7 +23,7 @@ class CreateAssessmentDtoValidationTest {
     }
 
     @Test
-    void missingValueAndCommentShouldFailValidation() {
+    void missingVEntryIdAndValueAndCommentShouldFailValidation() {
         // Arrange
         CreateAssessmentDto assessmentDto = new CreateAssessmentDto();
 
@@ -36,13 +36,14 @@ class CreateAssessmentDtoValidationTest {
                                              .toList();
 
         // Assert
-        assertThat(failedFields).isEqualTo(Lists.newArrayList("comment", "value"));
+        assertThat(failedFields).isEqualTo(Lists.newArrayList("comment", "entryId", "value"));
     }
 
     @Test
     void missingValueShouldFailValidation() {
         // Arrange
         CreateAssessmentDto assessmentDto = CreateAssessmentDto.builder()
+                .entryId(1L)
                                                                .comment("test")
                                                                .build();
 
@@ -61,6 +62,7 @@ class CreateAssessmentDtoValidationTest {
     void missingCommentShouldFailValidation() {
         // Arrange
         CreateAssessmentDto assessmentDto = CreateAssessmentDto.builder()
+                .entryId(1L)
                                                                .value(5)
                                                                .build();
 
@@ -79,6 +81,7 @@ class CreateAssessmentDtoValidationTest {
     void valueLowerThanAllowedShouldFailValidation() {
         // Arrange
         CreateAssessmentDto assessment = CreateAssessmentDto.builder()
+                .entryId(1L)
                                                             .value(0)
                                                             .comment("test")
                                                             .build();
@@ -97,6 +100,7 @@ class CreateAssessmentDtoValidationTest {
     void valueHigherThanAllowedShouldFailValidation() {
         // Arrange
         CreateAssessmentDto assessment = CreateAssessmentDto.builder()
+                .entryId(1L)
                                                             .value(10)
                                                             .comment("test")
                                                             .build();

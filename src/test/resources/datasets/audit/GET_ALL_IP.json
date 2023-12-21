@@ -1,0 +1,16 @@
+{
+  "security_audit": [
+    {
+      "id": 1,
+      "assessment_id": 1,
+      "info": "ip: 0:0:0:0:0:0:0:1, user-agent: PostmanRuntime/7.36.0",
+      "created_at": "1970-01-01 00:00:00.000000"
+    },
+    {
+      "id": 2,
+      "assessment_id": 1,
+      "info": "ip: 0:0:0:0:0:0:0:2, user-agent: PostmanRuntime/7.36.0",
+      "created_at": "1970-01-02 00:00:00.00000"
+    }
+  ]
+}
