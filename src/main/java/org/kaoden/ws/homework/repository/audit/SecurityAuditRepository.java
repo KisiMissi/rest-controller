@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SecurityAuditRepository extends JpaRepository<SecurityAudit, Long> {
 
-    Page<SecurityAudit> findAllByInfoContainingIgnoreCase(String info, Pageable pageable);
+    Page<SecurityAudit> findSecurityAuditsByInfoContainingIgnoreCase(String info, Pageable pageable);
 
 }

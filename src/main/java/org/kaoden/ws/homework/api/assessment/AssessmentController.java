@@ -41,7 +41,7 @@ public class AssessmentController {
 
     @GetMapping("all")
     @Operation(description = "Getting all assessments for the entry")
-    public List<AssessmentDto> getAll(@Valid @RequestBody SearchAssessmentDto searchDto,
+    public List<AssessmentDto> getAll(SearchAssessmentDto searchDto,
                                       @PageableDefault(sort = {"value"}, direction = DESC) Pageable pageable) {
         return mapper.toDtoList(service.getAll(mapper.toModel(searchDto), pageable));
     }

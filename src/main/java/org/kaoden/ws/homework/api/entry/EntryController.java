@@ -39,7 +39,7 @@ public class EntryController {
 
     @GetMapping("all")
     @Operation(description = "Return all entries from the storage or entries by name")
-    public List<EntryDTO> getAll(@RequestBody SearchEntryDTO searchDto,
+    public List<EntryDTO> getAll(SearchEntryDTO searchDto,
                                  @PageableDefault(sort = {"name"}) Pageable pageable) {
         return mapper.toDTOList(service.getAll(mapper.toModel(searchDto), pageable));
     }

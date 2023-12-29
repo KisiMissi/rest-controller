@@ -8,13 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kaoden.ws.homework.api.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.api.assessment.dto.CreateAssessmentDto;
-import org.kaoden.ws.homework.api.assessment.dto.SearchAssessmentDto;
 import org.kaoden.ws.homework.api.entry.dto.EntryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -66,9 +64,6 @@ class AssessmentControllerIT {
     void getAll() {
         // Arrange
         Long entryId = 1L;
-        SearchAssessmentDto searchDto = SearchAssessmentDto.builder()
-                                                           .entryId(entryId)
-                                                           .build();
         EntryDTO entryDTO = EntryDTO.builder()
                                     .id(entryId)
                                     .name("test")
@@ -89,12 +84,12 @@ class AssessmentControllerIT {
                                                          .build();
 
         // Act
-        List<AssessmentDto> result = client.method(HttpMethod.GET)
+        List<AssessmentDto> result = client.get()
                                            .uri(uriBuilder -> uriBuilder.path(URL)
                                                                         .path("/all")
+                                                                        .queryParam("entryId", entryId)
                                                                         .queryParam("sort", "id,asc")
                                                                         .build())
-                                           .bodyValue(searchDto)
                                            .exchange()
                                            .expectStatus()
                                            .isOk()
@@ -113,10 +108,6 @@ class AssessmentControllerIT {
     void filteredGetAll() {
         // Arrange
         Long entryId = 1L;
-        SearchAssessmentDto searchDto = SearchAssessmentDto.builder()
-                                                           .entryId(entryId)
-                                                           .value(5)
-                                                           .build();
         EntryDTO entryDTO = EntryDTO.builder()
                                     .id(entryId)
                                     .name("test")
@@ -131,9 +122,12 @@ class AssessmentControllerIT {
                                                          .build();
 
         // Act
-        List<AssessmentDto> result = client.method(HttpMethod.GET)
-                                           .uri("/{url}/all", URL)
-                                           .bodyValue(searchDto)
+        List<AssessmentDto> result = client.get()
+                                           .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                        .path("/all")
+                                                                        .queryParam("entryId", entryId)
+                                                                        .queryParam("value", 5)
+                                                                        .build())
                                            .exchange()
                                            .expectStatus()
                                            .isOk()

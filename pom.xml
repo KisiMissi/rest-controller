@@ -21,7 +21,6 @@
     <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
     <postgresql.version>42.7.0</postgresql.version>
     <database.rider.version>1.41.0</database.rider.version>
-    <user.agent.utils.version>1.21</user.agent.utils.version>
   </properties>
 
   <parent>
@@ -78,11 +77,6 @@
       <artifactId>lombok</artifactId>
       <version>${projectlombok.version}</version>
     </dependency>
-    <dependency>
-      <groupId>eu.bitwalker</groupId>
-      <artifactId>UserAgentUtils</artifactId>
-      <version>${user.agent.utils.version}</version>
-    </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -120,7 +114,7 @@
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate-validator.version}</version>
     </dependency>
@@ -129,6 +123,12 @@
       <artifactId>rider-core</artifactId>
       <version>${database.rider.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>annotations</artifactId>
+          <groupId>org.jetbrains</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.github.database-rider</groupId>

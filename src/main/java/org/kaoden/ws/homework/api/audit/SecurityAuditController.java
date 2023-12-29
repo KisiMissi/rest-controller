@@ -1,7 +1,6 @@
 package org.kaoden.ws.homework.api.audit;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.api.audit.dto.SearchSecurityAuditDto;
@@ -27,7 +26,7 @@ public class SecurityAuditController {
     SecurityAuditMapper mapper;
 
     @GetMapping("all")
-    public List<SecurityAuditDto> getAll(@Valid @RequestBody SearchSecurityAuditDto searchDto,
+    public List<SecurityAuditDto> getAll(SearchSecurityAuditDto searchDto,
                                          @PageableDefault Pageable pageable) {
         return mapper.toDtoList(service.getAll(mapper.toModel(searchDto), pageable));
     }

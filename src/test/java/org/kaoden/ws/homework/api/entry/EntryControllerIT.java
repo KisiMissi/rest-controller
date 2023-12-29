@@ -9,13 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kaoden.ws.homework.api.entry.dto.CreateEntryDTO;
 import org.kaoden.ws.homework.api.entry.dto.EntryDTO;
-import org.kaoden.ws.homework.api.entry.dto.SearchEntryDTO;
 import org.kaoden.ws.homework.api.entry.dto.UpdateEntryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -64,8 +62,6 @@ class EntryControllerIT {
     @DataSet("entry\\GET_ALL.json")
     void getAllEntries() {
         // Arrange
-        SearchEntryDTO searchDto = SearchEntryDTO.builder()
-                                                 .build();
         EntryDTO expectedDto1 = EntryDTO.builder()
                                         .id(1L)
                                         .name("test-1")
@@ -80,9 +76,8 @@ class EntryControllerIT {
                                         .build();
 
         // Act
-        List<EntryDTO> result = client.method(HttpMethod.GET)
+        List<EntryDTO> result = client.get()
                                       .uri("/{url}/all", URL)
-                                      .bodyValue(searchDto)
                                       .exchange()
                                       .expectStatus()
                                       .isOk()
@@ -102,9 +97,6 @@ class EntryControllerIT {
         // Arrange
         String name1 = "test-2";
         String name2 = "tEsT-2";
-        SearchEntryDTO searchDto = SearchEntryDTO.builder()
-                                                 .name(name2)
-                                                 .build();
         EntryDTO expectedDto1 = EntryDTO.builder()
                                         .id(2L)
                                         .name(name1)
@@ -119,9 +111,11 @@ class EntryControllerIT {
                                         .build();
 
         // Act
-        List<EntryDTO> result = client.method(HttpMethod.GET)
-                                      .uri("/{url}/all", URL)
-                                      .bodyValue(searchDto)
+        List<EntryDTO> result = client.get()
+                                      .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                   .path("/all")
+                                                                   .queryParam("name", name2)
+                                                                   .build())
                                       .exchange()
                                       .expectBodyList(EntryDTO.class)
                                       .returnResult()
@@ -139,9 +133,6 @@ class EntryControllerIT {
         // Arrange
         String description = "test-description-one";
         String description2 = "TeSt-DeScRipTioN-ONE";
-        SearchEntryDTO searchDto = SearchEntryDTO.builder()
-                                                 .description(description)
-                                                 .build();
         EntryDTO expectedDto1 = EntryDTO.builder()
                                         .id(1L)
                                         .name("test-1")
@@ -156,9 +147,11 @@ class EntryControllerIT {
                                         .build();
 
         // Act
-        List<EntryDTO> result = client.method(HttpMethod.GET)
-                                      .uri("/{url}/all", URL)
-                                      .bodyValue(searchDto)
+        List<EntryDTO> result = client.get()
+                                      .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                   .path("/all")
+                                                                   .queryParam("description", description)
+                                                                   .build())
                                       .exchange()
                                       .expectBodyList(EntryDTO.class)
                                       .returnResult()

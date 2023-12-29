@@ -7,13 +7,11 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.kaoden.ws.homework.api.audit.dto.SearchSecurityAuditDto;
 import org.kaoden.ws.homework.api.audit.dto.SecurityAuditDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -22,7 +20,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(DBUnitExtension.class)
 @Testcontainers
@@ -44,9 +42,6 @@ class SecurityAuditControllerIT {
     @DataSet("audit\\GET_ALL_IP.json")
     void getAllByIpInfoShouldReturnOneSecurityAudits() {
         // Arrange
-        SearchSecurityAuditDto searchDto = SearchSecurityAuditDto.builder()
-                                                                 .info("ip: 0:0:0:0:0:0:0:1")
-                                                                 .build();
         SecurityAuditDto expectedDto = SecurityAuditDto.builder()
                                                        .id(1L)
                                                        .assessmentId(1L)
@@ -55,9 +50,11 @@ class SecurityAuditControllerIT {
                                                        .build();
 
         // Act
-        List<SecurityAuditDto> result = client.method(HttpMethod.GET)
-                                              .uri("/{url}/all", URL)
-                                              .bodyValue(searchDto)
+        List<SecurityAuditDto> result = client.get()
+                                              .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                           .path("/all")
+                                                                           .queryParam("info", "ip: 0:0:0:0:0:0:0:1")
+                                                                           .build())
                                               .exchange()
                                               .expectStatus()
                                               .isOk()
@@ -74,9 +71,6 @@ class SecurityAuditControllerIT {
     @DataSet("audit\\GET_ALL_USER_AGENT.json")
     void getAllByUserAgentInfoShouldReturnTwoSecurityAudits() {
         // Arrange
-        SearchSecurityAuditDto searchDto = SearchSecurityAuditDto.builder()
-                                                                 .info("user-agent: PostmanRuntime/7.36.0")
-                                                                 .build();
         SecurityAuditDto expectedDto1 = SecurityAuditDto.builder()
                                                         .id(1L)
                                                         .assessmentId(1L)
@@ -91,9 +85,11 @@ class SecurityAuditControllerIT {
                                                         .build();
 
         // Act
-        List<SecurityAuditDto> result = client.method(HttpMethod.GET)
-                                              .uri("/{url}/all", URL)
-                                              .bodyValue(searchDto)
+        List<SecurityAuditDto> result = client.get()
+                                              .uri(uriBuilder -> uriBuilder.path(URL)
+                                                                           .path("/all")
+                                                                           .queryParam("info", "user-agent: PostmanRuntime/7.36.0")
+                                                                           .build())
                                               .exchange()
                                               .expectStatus()
                                               .isOk()
