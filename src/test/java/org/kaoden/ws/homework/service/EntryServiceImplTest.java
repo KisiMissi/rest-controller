@@ -8,6 +8,7 @@ import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
 import org.kaoden.ws.homework.service.entry.EntryServiceImpl;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
+import org.kaoden.ws.homework.service.entry.argument.SearchEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
 import org.mockito.*;
 import org.springframework.data.domain.PageImpl;
@@ -88,11 +89,12 @@ class EntryServiceImplTest {
     void searchEntryByName() {
         // Arrange
         String name = "Test";
+        SearchEntryArgument argument = SearchEntryArgument.builder().name(name).build();
         List<Entry> expectedList = Collections.singletonList(testEntry);
         when(repository.findEntriesByNameContainingIgnoreCase(name, pageable)).thenReturn(new PageImpl<>(expectedList));
 
         // Act
-        List<Entry> actualList = service.getAll(name, null, pageable)
+        List<Entry> actualList = service.getAll(argument, pageable)
                                         .toList();
 
         // Assert
@@ -102,11 +104,12 @@ class EntryServiceImplTest {
     @Test
     void getAllEntries() {
         // Arrange
+        SearchEntryArgument argument = SearchEntryArgument.builder().build();
         List<Entry> expectedList = Collections.singletonList(testEntry);
         when(repository.findAll(pageable)).thenReturn(new PageImpl<>(expectedList));
 
         // Act
-        List<Entry> actualList = service.getAll(null, null, pageable)
+        List<Entry> actualList = service.getAll(argument, pageable)
                                         .toList();
 
         // Assert
