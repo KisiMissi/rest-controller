@@ -2,6 +2,7 @@ package org.kaoden.ws.homework.service.audit;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.StringUtils;
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.SecurityAudit;
 import org.kaoden.ws.homework.repository.audit.SecurityAuditRepository;
@@ -31,11 +32,10 @@ public class SecurityAuditServiceImpl implements SecurityAuditService {
 
     @Override
     public Page<SecurityAudit> getAll(SearchSecurityAuditArgument argument, Pageable pageable) {
-        String info = argument.getInfo() == null ? "" : argument.getInfo();
-        if (info.isBlank()) {
+        if (StringUtils.isBlank(argument.getInfo())) {
             return repository.findAll(pageable);
         }
-        return repository.findSecurityAuditsByInfoContainingIgnoreCase(info, pageable);
+        return repository.findSecurityAuditsByInfoContainingIgnoreCase(argument.getInfo(), pageable);
     }
 
     @Override
