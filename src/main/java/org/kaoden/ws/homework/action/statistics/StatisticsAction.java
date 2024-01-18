@@ -11,6 +11,7 @@ import org.kaoden.ws.homework.service.statistics.StatisticsService;
 import org.kaoden.ws.homework.service.statistics.argument.UpdateStatisticsArgument;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -24,6 +25,7 @@ public class StatisticsAction {
     AssessmentServiceImpl assessmentService;
     StatisticsService statisticsService;
 
+    @Async("statisticsExecutor")
     @EventListener(value = {
             ApplicationReadyEvent.class,
             UpdateStatisticsEvent.class
