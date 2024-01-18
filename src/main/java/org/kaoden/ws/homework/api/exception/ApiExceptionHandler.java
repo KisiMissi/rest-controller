@@ -1,6 +1,7 @@
-package org.kaoden.ws.homework.api.entry.exception;
+package org.kaoden.ws.homework.api.exception;
 
 import org.kaoden.ws.homework.exception.NotFoundException;
+import org.kaoden.ws.homework.exception.SearchSecurityAuditException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,5 +26,11 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public @ResponseBody ExceptionDTO processNullArgumentException(MethodArgumentNotValidException exception) {
         return ExceptionDTO.of(Arrays.toString(exception.getDetailMessageArguments()));
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(SearchSecurityAuditException.class)
+    public @ResponseBody ExceptionDTO processNullArgumentException(SearchSecurityAuditException exception) {
+        return ExceptionDTO.of(exception.getMessage());
     }
 }

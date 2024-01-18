@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.action.argument;
+package org.kaoden.ws.homework.action.assessments.argument;
 
 import lombok.AccessLevel;
 import lombok.Builder;
