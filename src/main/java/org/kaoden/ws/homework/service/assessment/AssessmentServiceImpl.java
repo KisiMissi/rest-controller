@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.annotation.SecurityAuditCreation;
 import org.kaoden.ws.homework.annotation.Statistics;
+import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
@@ -51,6 +52,9 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Statistics
     @Transactional
     public void delete(Long assessmentId) {
+        if (!repository.existsById(assessmentId)) {
+            throw new NotFoundException("Entry assessment with that: " + assessmentId + " is not found");
+        }
         repository.deleteById(assessmentId);
     }
 

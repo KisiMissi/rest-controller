@@ -11,6 +11,7 @@ import org.kaoden.ws.homework.service.audit.argument.SearchSecurityAuditArgument
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -22,6 +23,7 @@ public class SecurityAuditServiceImpl implements SecurityAuditService {
     final SecurityAuditRepository repository;
 
     @Override
+    @Transactional
     public SecurityAudit create(CreateSecurityAuditArgument argument) {
         return repository.save(SecurityAudit.builder()
                                             .assessmentId(argument.getAssessmentId())
@@ -31,6 +33,7 @@ public class SecurityAuditServiceImpl implements SecurityAuditService {
     }
 
     @Override
+    @Transactional
     public Page<SecurityAudit> getAll(SearchSecurityAuditArgument argument, Pageable pageable) {
         if (StringUtils.isBlank(argument.getInfo())) {
             return repository.findAll(pageable);
@@ -39,6 +42,7 @@ public class SecurityAuditServiceImpl implements SecurityAuditService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if (!repository.existsById(id))
             throw new NotFoundException("Security audit with that: " + id + " is not found");
