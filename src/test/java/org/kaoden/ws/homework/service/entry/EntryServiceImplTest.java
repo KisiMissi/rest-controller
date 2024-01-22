@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.service;
+package org.kaoden.ws.homework.service.entry;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.repository.entry.EntryRepository;
-import org.kaoden.ws.homework.service.entry.EntryServiceImpl;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.SearchEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;

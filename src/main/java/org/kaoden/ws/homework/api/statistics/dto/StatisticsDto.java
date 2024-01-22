@@ -19,22 +19,22 @@ public class StatisticsDto {
     @Schema(name = "Total number of Assessments")
     Long totalAssessments;
     @Schema(name = "Average value of Assessments")
-    Float averageValue;
+    Double averageValue;
 
     @Schema(name = "Number of entries with average value 5")
     Long entriesAverageValueIs5;
     @Schema(name = "Percentage of entries with average value 5")
-    Float percentageOfEntriesAverageValueIs5;
+    Double percentageOfEntriesAverageValueIs5;
 
     @Schema(name = "Number of entries with average number 4 or higher")
     Long entriesAverageValueEqualOrHigherThan4;
     @Schema(name = "Percentage of entries with average number 4 or higher")
-    Float percentageOfEntriesAverageValueEqualOrHigherThan4;
+    Double percentageOfEntriesAverageValueEqualOrHigherThan4;
 
     @Schema(name = "Number of entries with values less then 4")
     Long entriesWithValuesLessThan4;
     @Schema(name = "Percentage of entries with values less then 4")
-    Float percentageOfEntriesWithValuesLessThan4;
+    Double percentageOfEntriesWithValuesLessThan4;
 
     @Schema(name = "Number of unrated entries")
     Long unratedEntries;
