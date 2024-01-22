@@ -1,4 +1,4 @@
-package org.kaoden.ws.homework.api.entry.exception;
+package org.kaoden.ws.homework.api.exception;
 
 
 import lombok.AccessLevel;

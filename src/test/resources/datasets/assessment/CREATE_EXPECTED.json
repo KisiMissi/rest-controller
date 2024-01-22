@@ -24,7 +24,7 @@
     {
       "id": "regex:.+",
       "assessment_id": 1,
-      "info": "ip: 127.0.0.1, user-agent: ReactorNetty/1.1.9",
+      "info": "ip: 127.0.0.1, user-agent: ReactorNetty/1.1.13",
       "created_at": "regex:.+"
     }
   ]

@@ -1,9 +1,9 @@
-package org.kaoden.ws.homework.action;
+package org.kaoden.ws.homework.action.assessments;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.kaoden.ws.homework.action.argument.CreateAssessmentActionArgument;
+import org.kaoden.ws.homework.action.assessments.argument.CreateAssessmentActionArgument;
 import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;

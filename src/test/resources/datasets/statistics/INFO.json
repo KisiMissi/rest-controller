@@ -1,0 +1,17 @@
+{
+  "statistics": [
+    {
+      "id": 1,
+      "total_entries": 1,
+      "total_assessments": 1,
+      "average_value": 1,
+      "entries_average_value_is5": 1,
+      "percentage_of_entries_average_value_is5": 1,
+      "entries_average_value_equal_or_higher_than4": 1,
+      "percentage_of_entries_average_value_equal_or_higher_than4": 1,
+      "entries_with_values_less_than4": 1,
+      "percentage_of_entries_with_values_less_than4": 1,
+      "unrated_entries": 1
+    }
+  ]
+}

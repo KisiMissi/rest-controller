@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.kaoden.ws.homework.action.CreateAssessmentAction;
+import org.kaoden.ws.homework.action.assessments.CreateAssessmentAction;
 import org.kaoden.ws.homework.api.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.api.assessment.dto.CreateAssessmentDto;
 import org.kaoden.ws.homework.api.assessment.dto.SearchAssessmentDto;
@@ -41,7 +41,7 @@ public class AssessmentController {
 
     @GetMapping("all")
     @Operation(description = "Getting all assessments for the entry")
-    public List<AssessmentDto> getAll(SearchAssessmentDto searchDto,
+    public List<AssessmentDto> getAll(@Valid SearchAssessmentDto searchDto,
                                       @PageableDefault(sort = {"value"}, direction = DESC) Pageable pageable) {
         return mapper.toDtoList(service.getAll(mapper.toModel(searchDto), pageable));
     }

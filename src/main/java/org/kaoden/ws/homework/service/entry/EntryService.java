@@ -4,6 +4,7 @@ import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.service.entry.argument.CreateEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.SearchEntryArgument;
 import org.kaoden.ws.homework.service.entry.argument.UpdateEntryArgument;
+import org.kaoden.ws.homework.service.entry.statistics.EntriesStatistics;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,5 +21,7 @@ public interface EntryService {
     void delete(Long id);
 
     Boolean exists(Long id);
+
+    EntriesStatistics getEntriesStatistics();
 
 }

@@ -1,26 +1,33 @@
 package org.kaoden.ws.homework.service.assessment;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.kaoden.ws.homework.annotation.SecurityAuditCreation;
+import org.kaoden.ws.homework.annotation.Statistics;
+import org.kaoden.ws.homework.exception.NotFoundException;
 import org.kaoden.ws.homework.model.Entry;
 import org.kaoden.ws.homework.model.EntryAssessment;
 import org.kaoden.ws.homework.repository.assessment.AssessmentRepository;
 import org.kaoden.ws.homework.service.assessment.argument.CreateAssessmentArgument;
 import org.kaoden.ws.homework.service.assessment.argument.SearchAssessmentArgument;
+import org.kaoden.ws.homework.service.assessment.statistics.AssessmentStatistics;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = PRIVATE)
 public class AssessmentServiceImpl implements AssessmentService {
 
     final AssessmentRepository repository;
 
     @Override
+    @Statistics
+    @Transactional
     @SecurityAuditCreation
     public EntryAssessment create(Entry entry, CreateAssessmentArgument argument) {
         return repository.save(EntryAssessment.builder()
@@ -31,17 +38,32 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<EntryAssessment> getAll(SearchAssessmentArgument searchArgument, Pageable pageable) {
         Long entryId = searchArgument.getEntryId();
         Integer value = searchArgument.getValue();
 
         return value != null
-                ? repository.findEntryAssessmentByEntry_IdAndValue(entryId, value, pageable)
-                : repository.findEntryAssessmentByEntry_Id(entryId, pageable);
+                ? repository.findEntryAssessmentByEntryIdAndValue(entryId, value, pageable)
+                : repository.findEntryAssessmentByEntryId(entryId, pageable);
     }
 
     @Override
+    @Statistics
+    @Transactional
     public void delete(Long assessmentId) {
+        if (!repository.existsById(assessmentId)) {
+            throw new NotFoundException("Entry assessment with that: " + assessmentId + " is not found");
+        }
         repository.deleteById(assessmentId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AssessmentStatistics getAssessmentStatistics() {
+        return AssessmentStatistics.builder()
+                                   .totalAssessments(repository.count())
+                                   .averageValue(repository.getAverageValue())
+                                   .build();
     }
 }

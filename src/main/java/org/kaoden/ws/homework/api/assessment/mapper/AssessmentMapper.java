@@ -1,6 +1,6 @@
 package org.kaoden.ws.homework.api.assessment.mapper;
 
-import org.kaoden.ws.homework.action.argument.CreateAssessmentActionArgument;
+import org.kaoden.ws.homework.action.assessments.argument.CreateAssessmentActionArgument;
 import org.kaoden.ws.homework.api.assessment.dto.AssessmentDto;
 import org.kaoden.ws.homework.api.assessment.dto.CreateAssessmentDto;
 import org.kaoden.ws.homework.api.assessment.dto.SearchAssessmentDto;
